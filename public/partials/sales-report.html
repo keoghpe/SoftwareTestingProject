@@ -1,0 +1,49 @@
+<h2>Here's your sales report for this month</h2>
+<table>
+	<thead>
+		<tr>
+		  <th>Town</th>
+		  <th>Date</th>
+		  <th>Locks Sold</th>
+		  <th>Stocks Sold</th>
+		  <th>Barrels Sold</th>
+		  <th>Total Sales</th>
+		</tr>
+	</thead>	
+	<tbody ng-repeat="location in sales">
+		<tr>
+			<td><strong>{{location.Town}}</strong></td>
+		</tr>
+		<tr ng-repeat="sale in location.Sales">
+		  <td>{{$index + 1}}</td>
+		  <td>{{sale.DateOfSale}}</td>
+		  <td>{{sale.LocksSold}}</td>
+		  <td>{{sale.StocksSold}}</td>
+		  <td>{{sale.BarrelsSold}}</td>
+		  <td>${{totalLocalSales(sale)}}</td>
+		</tr>
+		<tr>
+		  <td><em>Total Sales for: {{location.Town}}</em></td>
+		  <td><em>Last Sale: {{location.TotalSales[0].DateOfSale}}</em></td>
+		  <td><em>{{location.TotalSales[0].LocksSold}}</em></td>
+		  <td><em>{{location.TotalSales[0].StocksSold}}</em></td>
+		  <td><em>{{location.TotalSales[0].BarrelsSold}}</em></td>
+		  <td><em>${{totalLocalSales(location.TotalSales[0])}}</em></td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td>Total:</td>
+			<td></td>
+			<td>${{totalLocksSold()}}</td>
+			<td>${{totalStocksSold()}}</td>
+			<td>${{totalBarrelsSold()}}</td>
+			<td>${{totalLocksSold()}}</td>
+		</tr>
+	</tfoot>
+</table>
+
+<div data-alert class="alert-box warning round">
+You didn't sell a whole gun this month.
+  <a href="#" class="close">&times;</a>
+</div>

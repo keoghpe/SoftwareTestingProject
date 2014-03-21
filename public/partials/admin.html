@@ -1,0 +1,20 @@
+<h2>Welcome to the Awesome Admin Panel</h2>
+<p><em>Because you are awesome...</em></p>
+<form name="enterTown"> 
+	<div class="column large-6 medium-6">
+
+		<div ng-repeat="town in sales">
+			<label>
+				<input type="checkbox" ng-click="deleteTown(town.Town)"> {{ town.Town }}
+			</label>
+		</div>
+		<div class="row">
+			<div class="column large-8 medium-8">
+			<label>Enter a town to add:<input name="locks" type="text" ng-model="formData.Town">
+			</label>
+			<button ng-click="addTown()">Add Town</button>
+		</div>
+		
+	</div>
+
+</form>
