@@ -44,7 +44,7 @@ var TestLimits = {
 		BarrelsLeft : 60
 	};
 
-getLimits();
+
 var month, year =0;
 
 app.get('/api/sales', function(req, res) {
@@ -69,65 +69,85 @@ app.get('/api/sales', function(req, res) {
 // post a sale
 app.post('/api/sales', function(req, res) {
 
-	Towns.find({'Town':req.body.Town}, function(err, town){
+	console.log(req.body);
+	console.log(parseInt(req.body.LocksSold) );
+	console.log(parseInt(Stock.LocksLeft) );
 
-		/*
-			FIND RETURNS AN ARRAY THAT MUST BE LOOPED THROUGH.
-			I'M ASSUMING THAT WE WILL ALWAYS GET ONE RESULT BACK
-			SO I'M USING town[0]
+	if (parseInt(req.body.LocksSold) > TestLimits.LocksLeft || 
+			parseInt(req.body.StocksSold) > TestLimits.StocksLeft || 
+			parseInt(req.body.BarrelsSold) > TestLimits.BarrelsLeft) {
+		} else {
 
-			AND IT WORKED :) THAT'S A WHOLE 2 HOURS TRYING TO FIX
-			THAT BUG. SO IT DESERVES A MASSIVE COMMENT
-		*/
-		if (err)
-			res.send(err);
+		Towns.find({'Town':req.body.Town}, function(err, town){
 
-		if(town[0]) {
+			/*
+				FIND RETURNS AN ARRAY THAT MUST BE LOOPED THROUGH.
+				I'M ASSUMING THAT WE WILL ALWAYS GET ONE RESULT BACK
+				SO I'M USING town[0]
 
-			console.log(town[0].Town);
-		
-			town[0].Sales.push({
-				DateOfSale : new Date(year, month),
-				LocksSold : parseInt(req.body.LocksSold),
-				StocksSold : parseInt(req.body.StocksSold),
-				BarrelsSold : parseInt(req.body.BarrelsSold)
-			});
+				AND IT WORKED :) THAT'S A WHOLE 2 HOURS TRYING TO FIX
+				THAT BUG. SO IT DESERVES A MASSIVE COMMENT
+			*/
+			if (err)
+				res.send(err);
 
-			town[0].TotalSales[0].DateOfSale = new Date();
-			town[0].TotalSales[0].LocksSold += parseInt(req.body.LocksSold);
-			town[0].TotalSales[0].StocksSold += parseInt(req.body.StocksSold);
-			town[0].TotalSales[0].BarrelsSold += parseInt(req.body.BarrelsSold);
+			if(town[0]) {
 
-			TestLimits.LocksLeft -= parseInt(req.body.LocksSold);
-			TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
-			TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
-
-			console.log(TestLimits);
-
-			town[0].save(function(err){
-				if (err) {
-					res.send(err);
-				}
-
-				Towns.find(function(err, sales) {
-					if (err)
-						res.send(err);
-
-					var data = {
-						sales : {},
-						limits : {}
-					};
-
-					data.sales = sales;
-					data.limits = TestLimits;
-
-					res.json(data);
+				console.log(town[0].Town);
+			
+				town[0].Sales.push({
+					DateOfSale : new Date(year, month),
+					LocksSold : parseInt(req.body.LocksSold),
+					StocksSold : parseInt(req.body.StocksSold),
+					BarrelsSold : parseInt(req.body.BarrelsSold)
 				});
-			});
-		}
-	});
 
-	
+				town[0].TotalSales[0].DateOfSale = new Date();
+				town[0].TotalSales[0].LocksSold += parseInt(req.body.LocksSold);
+				town[0].TotalSales[0].StocksSold += parseInt(req.body.StocksSold);
+				town[0].TotalSales[0].BarrelsSold += parseInt(req.body.BarrelsSold);
+
+				TestLimits.LocksLeft -= parseInt(req.body.LocksSold);
+				TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
+				TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
+
+				town[0].save(function(err){
+					if (err) {
+						res.send(err);
+					}
+
+					Towns.find(function(err, sales) {
+						if (err)
+							res.send(err);
+
+						var data = {
+							sales : {},
+							limits : {}
+						};
+
+						data.sales = sales;
+						data.limits = TestLimits;
+
+						Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
+							if (err)
+								console.log(err);
+
+							stock[0] = TestLimits;
+
+							stock[0].save(function(err){
+								if (err) {
+									res.send(err);
+								}
+
+								res.json(data);
+							});
+						});
+					});
+				});
+			}
+		
+		});
+	}
 
 });
 
@@ -155,6 +175,7 @@ app.post('/api/createTown', function(req, res) {
 		Towns.find(function(err, data) {
 			if (err)
 				res.send(err);
+			
 			res.json(data);
 		});
 	});
@@ -199,13 +220,18 @@ app.delete('/api/towns/:town_name', function(req, res) {
 	});
 });
 
-// application -------------------------------------------------------------
-app.get('*', function(req, res) {
-	res.sendfile('./public/index.html'); 
+
+initialise(function() {
+	console.log('gets here too');
+	// application -------------------------------------------------------------
+	app.get('*', function(req, res) {
+		res.sendfile('./public/index.html'); 
+	});
+	// listen (start app with node server.js) ======================================
+	app.listen(8080);
+	console.log("App listening on port 8080");
 });
-// listen (start app with node server.js) ======================================
-app.listen(8080);
-console.log("App listening on port 8080");
+
 
 function createNewMonth(year, month, res){
 	Stock.create({
@@ -226,7 +252,7 @@ function createNewMonth(year, month, res){
 	});
 }
 
-function getLimits () {
+function initialise (callback) {
 
 	Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
 		if (err)
@@ -237,5 +263,8 @@ function getLimits () {
 		var year = stock[0].monthOf.getFullYear();
 
 		TestLimits = stock[0];
+
+		console.log('gets here');
+		callback();
 	});
 }

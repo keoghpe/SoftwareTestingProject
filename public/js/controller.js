@@ -83,16 +83,25 @@ function mainController($scope, $http) {
 		});
 
 	$scope.addSale = function() {
-		$http.post('/api/sales', $scope.formData)
-			.success(function(data) {
-				$scope.formData = {}; 
-				$scope.sales = data.sales;
-				$scope.limits = data.limits;
-				console.log(data);
-			})
-			.error(function(data) {
-				console.log('Error: ' + data);
-			});
+
+		if (parseInt($scope.formData.LocksSold) > $scope.limits.LocksLeft || 
+			parseInt($scope.formData.StocksSold) > $scope.limits.StocksLeft || 
+			parseInt($scope.formData.BarrelsSold) > $scope.limits.BarrelsLeft) {
+
+			console.log('Feck off');
+
+		} else {
+			$http.post('/api/sales', $scope.formData)
+				.success(function(data) {
+					$scope.formData = {}; 
+					$scope.sales = data.sales;
+					$scope.limits = data.limits;
+					console.log(data);
+				})
+				.error(function(data) {
+					console.log('Error: ' + data);
+				});
+			}
 	};
 
 	$scope.addTown = function() {
@@ -133,9 +142,7 @@ function mainController($scope, $http) {
 	};
 
 	function parseDate(dateString){
-		var yearMonth = [dateString[0] 
-		+ "" + dateString[1] + "" 
-		+ dateString[2] + "" + dateString[3],
+		var yearMonth = [dateString[0] + "" + dateString[1] + "" + dateString[2] + "" + dateString[3],
 		dateString[5] + "" + dateString[6]
 		];
 
