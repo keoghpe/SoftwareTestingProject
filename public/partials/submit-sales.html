@@ -8,23 +8,24 @@
 	</tr>
 	<tr>
 	  <td>Locks</td>
-	  <td>{{totalLocksSold()}}</td>
+	  <td>{{totalItemsSold('Locks')}}</td>
 	  <td>{{limits.LocksLeft}}</td>
 	</tr>
 	<tr>
 	  <td>Stocks</td>
-	  <td>{{totalStocksSold()}}</td>
+	  <td>{{totalItemsSold('Stocks')}}</td>
 	  <td>{{limits.StocksLeft}}</td>
 	</tr>
 	<tr>
 	  <td>Barrels</td>
-	  <td>{{totalBarrelsSold()}}</td>
+	  <td>{{totalItemsSold('Barrels')}}</td>
 	  <td>{{limits.BarrelsLeft}}</td>
 	</tr>
 </table>
-<div data-alert class="alert-box warning round">
-You haven't sold a whole gun yet this month.
-  <a href="#" class="close">&times;</a>
+<div class="{{soldAWholeGun()}}">
+	<div data-alert class="alert-box warning round ">
+		You haven't sold a whole gun yet this month.
+	</div>
 </div>
 <form name="enterSales"> 
 	<div class="column large-6 medium-6">

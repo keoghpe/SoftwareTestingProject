@@ -19,7 +19,6 @@ SalesApp.config(['$routeProvider',
 		otherwise({
 			redirectTo:'/submitSales'
 		});
-
 	}]);
 
 function mainController($scope, $http) {
@@ -30,37 +29,45 @@ function mainController($scope, $http) {
 					'July','August', 'September',
 					'October','November','December'];
 
-	$scope.totalLocksSold = function(){
-		var totalLocks = 0;
-
-		for (var i = 0; i < $scope.sales.length; i++) {
-			totalLocks += parseInt($scope.sales[i].TotalSales[0].LocksSold);
-			
-		}
-
-		return totalLocks;
+	$scope.Prices = {
+		'Locks': 45,
+		'Stocks': 30,
+		'Barrels': 25
 	};
 
-	$scope.totalStocksSold = function(){
-		var totalStocks = 0;
+	$scope.totalItemSales = function(itemName){
 
-		for (var i = 0; i < $scope.sales.length; i++) {
-			totalStocks += parseInt($scope.sales[i].TotalSales[0].StocksSold);
-			
-		}
+		console.log($scope.Prices[itemName]);
+		console.log($scope.Prices[itemName]);
 
-		return totalStocks;
+		var totalItemSales = 0;
+
+		totalItemSales = $scope.totalItemsSold(itemName) * $scope.Prices[itemName];
+
+		console.log(totalItemSales);
+
+		return totalItemSales;
 	};
 
-	$scope.totalBarrelsSold = function(){
-		var totalBarrels = 0;
+	$scope.totalItemsSold = function(itemName){
+		
+		var totalItems = 0;
 
 		for (var i = 0; i < $scope.sales.length; i++) {
-			totalBarrels += parseInt($scope.sales[i].TotalSales[0].BarrelsSold);
-			
+			totalItems += parseInt($scope.sales[i].TotalSales[0][itemName + 'Sold']);
 		}
 
-		return totalBarrels;
+		return totalItems;
+	};
+
+	$scope.totalSales = function(){
+		var totalSales = 0;
+
+		totalSales += $scope.totalItemsSold('Locks') * 45;
+		totalSales += $scope.totalItemsSold('Stocks') * 30;
+		totalSales += $scope.totalItemsSold('Barrels') * 25;
+
+		return totalSales;
 	};
 
 	$scope.totalLocalSales = function(location) {
@@ -87,9 +94,6 @@ function mainController($scope, $http) {
 		if (parseInt($scope.formData.LocksSold) > $scope.limits.LocksLeft || 
 			parseInt($scope.formData.StocksSold) > $scope.limits.StocksLeft || 
 			parseInt($scope.formData.BarrelsSold) > $scope.limits.BarrelsLeft) {
-
-			console.log('Feck off');
-
 		} else {
 			$http.post('/api/sales', $scope.formData)
 				.success(function(data) {
@@ -148,4 +152,29 @@ function mainController($scope, $http) {
 
 		return yearMonth;
 	}
+
+	$scope.calculateCommission = function(sales) {
+
+		var commission = 0;
+
+		if (sales <= 1000) {
+			commission = sales * .1;
+		} else if (sales <= 1800) {
+			commission = 100 + ((sales - 1000) * .15);
+		} else if (sales > 1800) {
+			commission = 220 + ((sales - 1800) * .2);
+		}
+		return commission;
+	};
+
+	$scope.soldAWholeGun = function() {
+
+		if ($scope.totalItemsSold('Locks') === 0 ||
+			$scope.totalItemsSold('Stocks') === 0 ||
+			$scope.totalItemsSold('Barrels') === 0 ) {
+			return '';
+		} else {
+			return 'hide';	
+		}
+	};
 }

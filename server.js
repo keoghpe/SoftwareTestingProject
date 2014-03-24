@@ -45,7 +45,7 @@ var TestLimits = {
 	};
 
 
-var month, year =0;
+var month=0, year =0;
 
 app.get('/api/sales', function(req, res) {
 
@@ -59,19 +59,20 @@ app.get('/api/sales', function(req, res) {
 			res.send(err);
 
 		data.sales = sales;
-		data.limits = TestLimits;
 
-		res.json(data);
+		Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
+			if (err)
+				console.log(err);
+
+			data.limits = stock[0];
+			res.json(data);
+		});
 	});
 
 });
 
 // post a sale
 app.post('/api/sales', function(req, res) {
-
-	console.log(req.body);
-	console.log(parseInt(req.body.LocksSold) );
-	console.log(parseInt(Stock.LocksLeft) );
 
 	if (parseInt(req.body.LocksSold) > TestLimits.LocksLeft || 
 			parseInt(req.body.StocksSold) > TestLimits.StocksLeft || 
@@ -80,14 +81,6 @@ app.post('/api/sales', function(req, res) {
 
 		Towns.find({'Town':req.body.Town}, function(err, town){
 
-			/*
-				FIND RETURNS AN ARRAY THAT MUST BE LOOPED THROUGH.
-				I'M ASSUMING THAT WE WILL ALWAYS GET ONE RESULT BACK
-				SO I'M USING town[0]
-
-				AND IT WORKED :) THAT'S A WHOLE 2 HOURS TRYING TO FIX
-				THAT BUG. SO IT DESERVES A MASSIVE COMMENT
-			*/
 			if (err)
 				res.send(err);
 
@@ -227,9 +220,9 @@ initialise(function() {
 	app.get('*', function(req, res) {
 		res.sendfile('./public/index.html'); 
 	});
-	// listen (start app with node server.js) ======================================
-	app.listen(8080);
-	console.log("App listening on port 8080");
+	var port = process.env.PORT || 8080;
+	app.listen(port);
+	console.log("App listening on port " + port);
 });
 
 
@@ -259,12 +252,11 @@ function initialise (callback) {
 			console.log(err);
 
 		console.log(stock[0]);
-		var month = stock[0].monthOf.getMonth();
-		var year = stock[0].monthOf.getFullYear();
+		month = stock[0].monthOf.getMonth();
+		year = stock[0].monthOf.getFullYear();
 
 		TestLimits = stock[0];
 
-		console.log('gets here');
 		callback();
 	});
 }

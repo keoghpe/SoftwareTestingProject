@@ -1,15 +1,25 @@
 {
-  "name": "toDo",
+  "name": "StubsGuns",
   "version": "0.0.0",
-  "description": "",
+  "description": "Don't read me",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Pete",
-  "license": "ISC",
-  "dependencies" : {
-    "express"    : "~3.4.4",
-    "mongoose"   : "~3.6.2"
-    }
+  "license": "MIT",
+  "dependencies": {
+    "express": "~3.4.8",
+    "mongoose": "~3.6.20"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/keoghpe/lab3Node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/keoghpe/lab3Node/issues"
+  },
+  "homepage": "https://github.com/keoghpe/lab3Node"
 }
