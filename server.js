@@ -58,8 +58,8 @@ app.get('/api/sales', function(req, res) {
 			res.send(err);
 
 		data.sales = sales;
-
-		Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
+//CHANGED THIS FOR mongolabs
+		Stock.find().sort({monthOf.$date: -1}).limit(1).exec(function(err, stock){
 			if (err)
 				console.log(err);
 
