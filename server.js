@@ -5,12 +5,11 @@ var express  = require('express');
 var app      = express(); 								// create our app w/ express
 var mongoose = require('mongoose'); 					// mongoose for mongodb
 var Schema = mongoose.Schema;
-console.log('poop');
 // configuration =================
 //var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://keoghpe:swell0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
-var mongoUri ='mongodb://keoghpe:swell0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
-
-var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/mydb';
+var mongoUri ='mongodb://keoghpe:swellpro0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
+// mongo ds035027.mongolab.com:35027/heroku_app23316660 -u keoghpe -p <dbpassword>
+//var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/mydb';
 
 mongoose.connect(mongoUri);
 
@@ -28,17 +27,18 @@ var sale = new Schema({
 	BarrelsSold : Number
 });
 
-var Towns = mongoose.model('towns',{
-	Town : String,
-	Sales : [sale],
-	TotalSales : [sale]
-});
 
-var Stock = mongoose.model('stock',{
+var Stock = mongoose.model('stocks',{
 	monthOf : Date,
 	LocksLeft : Number,
 	StocksLeft : Number,
 	BarrelsLeft : Number
+});
+
+var Towns = mongoose.model('towns',{
+	Town : String,
+	Sales : [sale],
+	TotalSales : [sale]
 });
 			
 var TestLimits = {
@@ -50,7 +50,7 @@ var TestLimits = {
 
 
 var month=0, year =0;
-/*
+
 app.get('/api/sales', function(req, res) {
 
 
@@ -219,19 +219,23 @@ app.delete('/api/towns/:town_name', function(req, res) {
 		});
 	});
 });
-*/
 
-initialise(function() {
+
+mongoose.connection.on('error', function(err) {
+		console.log(err);
+	});
+
+mongoose.connection.once('open', function() {
+	initialise(function() {
 
 	// application -------------------------------------------------------------
-	app.get('*', function(req, res) {
-		res.sendfile('./public/index.html'); 
-	});
-	var port = process.env.PORT || 8080;
-	app.listen(port);
-	console.log("App listening on port " + port);
-});
-
+		app.get('*', function(req, res) {
+			res.sendfile('./public/index.html'); 
+		});
+		var port = process.env.PORT || 8080;
+		app.listen(port);
+		console.log("App listening on port " + port);
+	})});
 
 function createNewMonth(year, month, res){
 	Stock.create({
@@ -254,10 +258,15 @@ function createNewMonth(year, month, res){
 
 function initialise (callback) {
 
+	/*Stock.find(function(err, stock) {
+		console.log(stock);
+		callback();
+	});*/
 	Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
 		if (err)
 			console.log(err);
 		console.log('helloooooo');
+		console.log(stock);
 		console.log(stock[0]);
 		month = stock[0].monthOf.getMonth();
 		year = stock[0].monthOf.getFullYear();
