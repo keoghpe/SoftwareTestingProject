@@ -6,11 +6,9 @@ var app      = express(); 								// create our app w/ express
 var mongoose = require('mongoose'); 					// mongoose for mongodb
 var Schema = mongoose.Schema;
 
-console.log('Set up complete')
 // configuration =================
 mongoose.connect('mongodb://keoghpe:swellpro0864@ds035027.mongolab.com:35027/heroku_app23316660');
-//mongoose.connect('mongodb://localhost:27017/GunShop'); 	// connect to mongoDB database on modulus.io
-console.log('Connecting to db...');
+//mongoose.connect('mongodb://localhost:27017/GunShop'); 
 app.configure(function() {
 	app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 	app.use(express.logger('dev')); 						// log every request to the console
