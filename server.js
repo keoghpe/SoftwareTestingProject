@@ -253,7 +253,7 @@ function initialise (callback) {
 	Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
 		if (err)
 			console.log(err);
-
+		console.log('helloooooo');
 		console.log(stock[0]);
 		month = stock[0].monthOf.getMonth();
 		year = stock[0].monthOf.getFullYear();
