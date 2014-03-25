@@ -48,12 +48,15 @@ var month=0, year =0;
 
 app.get('/api/sales', function(req, res) {
 
+
+
 	var data = {
 		sales : {},
 		limits : {}
 	};
 	Towns.find(function(err, sales) {
 
+		console.log(sales);
 		if (err)
 			res.send(err);
 
