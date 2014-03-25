@@ -45,7 +45,7 @@ var TestLimits = {
 
 
 var month=0, year =0;
-
+/*
 app.get('/api/sales', function(req, res) {
 
 
@@ -214,10 +214,10 @@ app.delete('/api/towns/:town_name', function(req, res) {
 		});
 	});
 });
-
+*/
 
 initialise(function() {
-	console.log('gets here too');
+
 	// application -------------------------------------------------------------
 	app.get('*', function(req, res) {
 		res.sendfile('./public/index.html'); 
