@@ -5,9 +5,10 @@ var express  = require('express');
 var app      = express(); 								// create our app w/ express
 var mongoose = require('mongoose'); 					// mongoose for mongodb
 var Schema = mongoose.Schema;
-
+console.log('poop');
 // configuration =================
-var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://keoghpe:swell0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
+//var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://keoghpe:swell0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
+var mongoUri ='mongodb://keoghpe:swell0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
 
 mongoose.connect(mongoUri);
 
