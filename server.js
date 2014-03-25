@@ -7,8 +7,9 @@ var mongoose = require('mongoose'); 					// mongoose for mongodb
 var Schema = mongoose.Schema;
 
 // configuration =================
-mongoose.connect('mongodb://keoghpe:swellpro0864@ds035027.mongolab.com:35027/heroku_app23316660');
-//mongoose.connect('mongodb://localhost:27017/GunShop'); 
+var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost:27017/GunShop';
+mongoose.connect(mongoUri);
+
 app.configure(function() {
 	app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 	app.use(express.logger('dev')); 						// log every request to the console
