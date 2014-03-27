@@ -7,7 +7,8 @@ var mongoose = require('mongoose'); 					// mongoose for mongodb
 var Schema = mongoose.Schema;
 // configuration =================
 //var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://keoghpe:swell0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
-var mongoUri ='mongodb://keoghpe:swellpro0864@ds035027.mongolab.com:35027/heroku_app23316660';//'mongodb://localhost:27017/GunShop';
+//var mongoUri ='mongodb://keoghpe:swellpro0864@ds035027.mongolab.com:35027/heroku_app23316660';//
+var mongoUri = 'mongodb://localhost:27017/GunShop';
 // mongo ds035027.mongolab.com:35027/heroku_app23316660 -u keoghpe -p <dbpassword>
 //var mongoUri = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/mydb';
 
@@ -19,15 +20,15 @@ app.configure(function() {
 	app.use(express.bodyParser()); 							// pull information from html in POST
 	app.use(express.methodOverride()); 						// simulate DELETE and PUT
 });
-
-var sale = new Schema({
+var Sales = mongoose.model('sales',{
 	DateOfSale : Date,
 	LocksSold : Number,
 	StocksSold : Number,
-	BarrelsSold : Number
+	BarrelsSold : Number,
+	TownName: String
 });
 
-
+///IN MONGOOSE THIS SHITZ NEEDS TO BE PLURALIZED
 var Stock = mongoose.model('stocks',{
 	monthOf : Date,
 	LocksLeft : Number,
@@ -36,9 +37,7 @@ var Stock = mongoose.model('stocks',{
 });
 
 var Towns = mongoose.model('towns',{
-	Town : String,
-	Sales : [sale],
-	TotalSales : [sale]
+	TownName : String
 });
 			
 var TestLimits = {
@@ -53,26 +52,33 @@ var month=0, year =0;
 
 app.get('/api/sales', function(req, res) {
 
-
-
+	var start = new Date(year, month, 1);
+	var end = new Date(year, month, 28);
 	var data = {
 		sales : {},
 		limits : {}
 	};
-	Towns.find(function(err, sales) {
 
+	console.log(start);
+	console.log(end);
+	Sales.find({monthOf: {$gte: start, $lt: end}}).exec(function(err, sales) {
+		//
 		console.log(sales);
 		if (err)
 			res.send(err);
 
 		data.sales = sales;
-//CHANGED THIS FOR mongolabs
+
 		Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
 			if (err)
 				console.log(err);
 
 			data.limits = stock[0];
-			res.json(data);
+
+			Towns.find().exec(function(err, towns){
+				data.towns = towns;
+				res.json(data);
+			});			
 		});
 	});
 
@@ -86,7 +92,55 @@ app.post('/api/sales', function(req, res) {
 			parseInt(req.body.BarrelsSold) > TestLimits.BarrelsLeft) {
 		} else {
 
-		Towns.find({'Town':req.body.Town}, function(err, town){
+		var the_sale = new Sales({
+			DateOfSale : new Date(year, month),
+			LocksSold : parseInt(req.body.LocksSold),
+			StocksSold : parseInt(req.body.StocksSold),
+			BarrelsSold : parseInt(req.body.BarrelsSold)
+		});
+
+		the_sale.save(function(err){
+			if (err) 
+				console.log(err);
+
+			TestLimits.LocksLeft -= parseInt(req.body.LocksSold);
+			TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
+			TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
+
+
+			Sales.find(function(err, sales) {
+				if (err)
+					res.send(err);
+
+				var data = {
+					sales : {},
+					limits : {}
+				};
+
+				data.sales = sales;
+				data.limits = TestLimits;
+
+				Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
+					if (err)
+						console.log(err);
+
+					stock[0] = TestLimits;
+
+					stock[0].save(function(err){
+						if (err) {
+							res.send(err);
+						}
+
+						res.json(data);
+					});
+				});
+			});
+
+		});
+
+		
+/*
+		Sales.find({'Town':req.body.Town}, function(err, town){
 
 			if (err)
 				res.send(err);
@@ -116,7 +170,7 @@ app.post('/api/sales', function(req, res) {
 						res.send(err);
 					}
 
-					Towns.find(function(err, sales) {
+					Sales.find(function(err, sales) {
 						if (err)
 							res.send(err);
 
@@ -146,7 +200,7 @@ app.post('/api/sales', function(req, res) {
 				});
 			}
 		
-		});
+		});*/
 	}
 
 });
@@ -154,19 +208,7 @@ app.post('/api/sales', function(req, res) {
 app.post('/api/createTown', function(req, res) {
 
 	Towns.create({
-		Town : req.body.Town,
-		Sales : [{
-			DateOfSale : new Date(),
-			LocksSold : 0,
-			StocksSold : 0,
-			BarrelsSold : 0
-		}],
-		TotalSales : [{
-			DateOfSale : new Date(),
-			LocksSold : 0,
-			StocksSold : 0,
-			BarrelsSold : 0
-		}],
+		TownName : req.body.Town,
 		done : false
 	}, function(err, data) {
 		if (err)
@@ -205,7 +247,7 @@ app.delete('/api/towns/:town_name', function(req, res) {
 	console.log(req.params.town_name);
 
 	Towns.remove({
-		Town : req.params.town_name
+		TownName : req.params.town_name
 	}, function(err, data) {
 		if (err)
 			res.send(err);
@@ -235,7 +277,8 @@ mongoose.connection.once('open', function() {
 		var port = process.env.PORT || 8080;
 		app.listen(port);
 		console.log("App listening on port " + port);
-	})});
+	});
+});
 
 function createNewMonth(year, month, res){
 	Stock.create({
@@ -268,7 +311,7 @@ function initialise (callback) {
 		console.log('helloooooo');
 		console.log(stock);
 		console.log(stock[0]);
-		month = stock[0].monthOf.getMonth();
+		month = stock[0].monthOf.getMonth() -1;
 		year = stock[0].monthOf.getFullYear();
 
 		TestLimits = stock[0];
