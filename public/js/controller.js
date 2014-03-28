@@ -37,14 +37,9 @@ function mainController($scope, $http) {
 
 	$scope.totalItemSales = function(itemName){
 
-		console.log($scope.Prices[itemName]);
-		console.log($scope.Prices[itemName]);
-
 		var totalItemSales = 0;
 
 		totalItemSales = $scope.totalItemsSold(itemName) * $scope.Prices[itemName];
-
-		console.log(totalItemSales);
 
 		return totalItemSales;
 	};
@@ -54,7 +49,8 @@ function mainController($scope, $http) {
 		var totalItems = 0;
 
 		for (var i = 0; i < $scope.sales.length; i++) {
-			totalItems += parseInt($scope.sales[i].TotalSales[0][itemName + 'Sold']);
+			//totalItems += parseInt($scope.sales[i].TotalSales[0][itemName + 'Sold']);
+			totalItems += parseInt($scope.sales[i][itemName+'Sold']);
 		}
 
 		return totalItems;

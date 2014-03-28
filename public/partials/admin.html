@@ -3,9 +3,9 @@
 <form name="enterTown"> 
 	<div class="column large-6 medium-6">
 
-		<div ng-repeat="town in sales">
+		<div ng-repeat="town in towns">
 			<label>
-				<input type="checkbox" ng-click="deleteTown(town.Town)"> {{ town.Town }}
+				<input type="checkbox" ng-click="deleteTown(town.TownName)"> {{ town.TownName }}
 			</label>
 		</div>
 		<div class="row">

@@ -52,8 +52,8 @@ var month=0, year =0;
 
 app.get('/api/sales', function(req, res) {
 
-	var start = new Date(year, month, 1);
-	var end = new Date(year, month, 28);
+	var start = new Date(year, month-1, 1);
+	var end = new Date(year, month-1, 31);
 	var data = {
 		sales : {},
 		limits : {}
@@ -61,14 +61,15 @@ app.get('/api/sales', function(req, res) {
 
 	console.log(start);
 	console.log(end);
-	Sales.find({monthOf: {$gte: start, $lt: end}}).exec(function(err, sales) {
-		//
+	Sales.find().exec(function(err, sales) {
+		//{monthOf: {$gte: start, $lte: end}}
 		console.log(sales);
 		if (err)
 			res.send(err);
 
 		data.sales = sales;
 
+		console.log(sales);
 		Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
 			if (err)
 				console.log(err);
@@ -96,7 +97,8 @@ app.post('/api/sales', function(req, res) {
 			DateOfSale : new Date(year, month),
 			LocksSold : parseInt(req.body.LocksSold),
 			StocksSold : parseInt(req.body.StocksSold),
-			BarrelsSold : parseInt(req.body.BarrelsSold)
+			BarrelsSold : parseInt(req.body.BarrelsSold),
+			TownName: req.body.Town
 		});
 
 		the_sale.save(function(err){
@@ -301,10 +303,6 @@ function createNewMonth(year, month, res){
 
 function initialise (callback) {
 
-	/*Stock.find(function(err, stock) {
-		console.log(stock);
-		callback();
-	});*/
 	Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
 		if (err)
 			console.log(err);
