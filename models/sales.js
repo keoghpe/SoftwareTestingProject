@@ -1,16 +1,34 @@
 var mongoose = require('mongoose');
 
-var sale = mongoose.Schema({
+var Sales = mongoose.Schema({
 	DateOfSale : Date,
 	LocksSold : Number,
 	StocksSold : Number,
-	BarrelsSold : Number
+	BarrelsSold : Number,
+	TownName: String
 });
 
-var Towns = mongoose.Schema({
-	Town : String,
-	Sales : [sale],
-	TotalSales : [sale]
+module.exports = mongoose.model('sales', Sales);
+
+/*
+var Sales = mongoose.model('sales',{
+	DateOfSale : Date,
+	LocksSold : Number,
+	StocksSold : Number,
+	BarrelsSold : Number,
+	TownName: String
 });
 
-module.exports = mongoose.model('towns', Towns);
+///IN MONGOOSE THIS SHITZ NEEDS TO BE PLURALIZED
+var Stock = mongoose.model('stocks',{
+	monthOf : Date,
+	LocksLeft : Number,
+	StocksLeft : Number,
+	BarrelsLeft : Number
+});
+
+var Towns = mongoose.model('towns',{
+	TownName : String
+});
+	
+*/
