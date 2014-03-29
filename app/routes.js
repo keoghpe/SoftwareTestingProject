@@ -1,43 +1,34 @@
-var Sales = require('../models/Sales.js');
-var TOWNS = require('../towns');
-var STOCK = require('../Stock');
-var SALES = require('../Sales');
+//var Sales = require('../models/Sales.js');
+var Towns = require('../modules/Towns');
+var Stock = require('../modules/Stock');
+var SALES = require('../modules/Sales');
 
 module.exports = function(app, TestLimits){
 
-	var month=0, year =0;
-
-	app.get('/api/sales', function(req, res) {
-
-		var data = {
+	var data = {
 			sales : {},
 			limits : {}
 		};
 
+	app.get('/api/sales', function(req, res) {
+
 		SALES.getSales(
 			
-			function(){
+			function(sales){
 				data.sales = sales;
 
-				STOCK.getCurrentStock(function(stock){
+				Stock.getCurrentStock(function(stock){
 
 					data.limits = stock[0];
 
-					TOWNS.getTowns(function(twns) {
+					Towns.getTowns(function(twns) {
 
 						data.towns = twns;
 						res.json(data);
 
-						}, function(err) {
-							res.send(err);
-						});		
-					}, function(err){
-						res.send(err);
-					});
-				},
-				function(){
-					res.send(err);
-				});	
+						}, handleError);		
+					}, handleError);
+				}, handleError);	
 	});
 
 	app.get('/api/sales/:month_number/:year_number', function(req, res) {
@@ -45,9 +36,7 @@ module.exports = function(app, TestLimits){
 			function(sales) {
 				res.json(sales);
 			},
-			function(err) {
-				res.send(err);
-			});
+			handleError);
 	});
 
 	// post a sale
@@ -58,75 +47,49 @@ module.exports = function(app, TestLimits){
 				parseInt(req.body.BarrelsSold) > TestLimits.BarrelsLeft) {
 			} else {
 
-			var the_sale = new Sales({
-				DateOfSale : new Date(year, month),
-				LocksSold : parseInt(req.body.LocksSold),
-				StocksSold : parseInt(req.body.StocksSold),
-				BarrelsSold : parseInt(req.body.BarrelsSold),
-				TownName: req.body.Town
-			});
-
-			//MONGOOSE SAVE METHOD TAKES EITHER 3 ARGS OR NONE AT ALL
-			the_sale.save(function(err, thesale, numAf){
-				if (err) 
-					console.log(err);
+			SALES.reportSale(req.body, function() {
 
 				TestLimits.LocksLeft -= parseInt(req.body.LocksSold);
 				TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
 				TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
 
-
-				Sales.find(function(err, sales) {
-					if (err)
-						res.send(err);
-
-					var data = {
-						sales : {},
-						limits : {}
-					};
+				var today = new Date();
+				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(), function(sales) {
 
 					data.sales = sales;
-					
 
-					STOCK.updateStock(TestLimits ,
+					Stock.updateStock(TestLimits ,
 						function(stock){
 							data.limits = stock;
 							res.json(data);
-							},
-						function(err) {
-							res.send(err);
-							});
-				});
-
-			});
+							}, handleError);
+				}, handleError);
+			}, handleError);
 		}
 	});
 
 	app.post('/api/createTown', function(req, res) {
 
-		TOWNS.createTown(req.body.Town, function(data) {
+		Towns.createTown(req.body.Town, function(data) {
 				 res.json(data);
-			}, function(err) {
-				res.send(err);
-			});
+			}, handleError);
 
 	});
 
 	app.post('/api/endMonth', function(req, res) {
 
-		STOCK.createNewMonth(year, month, function(sales) {
+		Stock.createNewMonth(year, month, function(sales) {
 			res.json(sales);
-		}, function(err) {
-			res.send(err)
-		});
+		}, handleError);
 	});
 
 	app.delete('/api/towns/:town_name', function(req, res) {
 
-		TOWNS.removeTown(req.params.town_name, function(data) {
+		Towns.removeTown(req.params.town_name, function(data) {
 			 res.json(data);
-		}, function(err) {
-			res.send(err);
-		});
+		}, handleError);
 	});
 };
+function handleError (err) {
+	res.send(err);
+}
