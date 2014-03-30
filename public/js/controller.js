@@ -52,7 +52,7 @@ function mainController($scope, $http) {
 			//totalItems += parseInt($scope.sales[i].TotalSales[0][itemName + 'Sold']);
 			totalItems += parseInt($scope.sales[i][itemName+'Sold']);
 		}
-
+		console.log(totalItems);
 		return totalItems;
 	};
 

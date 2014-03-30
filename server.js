@@ -3,19 +3,28 @@
 // set up ========================
 var express  = require('express');
 var app      = express(); 								// create our app w/ express
-var mongoose = require('mongoose'); 					// mongoose for mongodb
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash = require('connect-flash');
 var configDB = require('./config/database.js');
 var Sales = require('./models/Sales.js');
 var Stock = require('./models/Stock.js');
 var Towns = require('./models/Towns.js');
 
 mongoose.connect(configDB.url);
+//require('./config/passport')('passport');
 
 app.configure(function() {
 	app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 	app.use(express.logger('dev')); 						// log every request to the console
 	app.use(express.bodyParser()); 							// pull information from html in POST
-	app.use(express.methodOverride()); 						// simulate DELETE and PUT
+	app.use(express.methodOverride()); 
+
+	app.use( express.cookieParser() );
+	app.use(express.session({secret : 'shutthefackappjustshutthefackapp'}));
+	app.use(passport.initialize());
+	app.use(passport.session());
+	app.use(flash());
 });
 			
 var TestLimits = {

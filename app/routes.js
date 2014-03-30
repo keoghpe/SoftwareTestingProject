@@ -2,6 +2,7 @@
 var Towns = require('../modules/Towns');
 var Stock = require('../modules/Stock');
 var SALES = require('../modules/Sales');
+var Users = require('../modules/user');
 
 module.exports = function(app, TestLimits){
 
@@ -9,6 +10,10 @@ module.exports = function(app, TestLimits){
 			sales : {},
 			limits : {}
 		};
+
+	app.get('/', function(req, res) {
+		res.render('../public/landingPage.html');
+	});
 
 	app.get('/api/sales', function(req, res) {
 
@@ -39,6 +44,13 @@ module.exports = function(app, TestLimits){
 			handleError);
 	});
 
+	app.get('/api/user', function(req, res) {
+		Users.getUsers(
+			function(users) {
+				res.json(users);
+			},
+			handleError);
+	});
 	// post a sale
 	app.post('/api/sales', function(req, res) {
 
@@ -83,13 +95,39 @@ module.exports = function(app, TestLimits){
 		}, handleError);
 	});
 
-	app.delete('/api/towns/:town_name', function(req, res) {
+	app.post('/api/user', function(req, res) {
+
+		Users.createUser(req.body.userName, function(data) {
+				 res.json(data);
+			}, handleError);
+	});
+
+	app.delete('/api/towns/:town_name', isLoggedIn, function(req, res) {
 
 		Towns.removeTown(req.params.town_name, function(data) {
 			 res.json(data);
 		}, handleError);
 	});
+
+	app.delete('/api/user/:user_name', isLoggedIn, function(req, res) {
+
+		Users.removeUser(req.params.user_name, function(data) {
+			 res.json(data);
+		}, handleError);
+	});
+
+	app.get('/logout', function(req, res) {
+		req.logout();
+		res.redirect('/');
+	});
 };
 function handleError (err) {
 	res.send(err);
+}
+
+function isLoggedIn(req, res, next){
+	if (req.isAuthenticated)
+		return next;
+
+	res.redirect('/');
 }
