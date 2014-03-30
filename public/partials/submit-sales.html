@@ -1,5 +1,5 @@
 <h2>Submit your sales for a town</h2>
-<h3>Sales for {{months[theDate.getMonth()-1]}}, {{theDate.getFullYear()}}</h3>
+<h3>Sales for {{months[theDate.getMonth()]}}, {{theDate.getFullYear()}}</h3>
 <table>
 	<tr>
 	  <th>Product Name</th>
@@ -9,45 +9,46 @@
 	<tr>
 	  <td>Locks</td>
 	  <td>{{totalItemsSold('Locks')}}</td>
-	  <td>{{limits.LocksLeft}}</td>
+	  <td>{{totalItemsLeft('Locks')}}</td>
 	</tr>
 	<tr>
 	  <td>Stocks</td>
 	  <td>{{totalItemsSold('Stocks')}}</td>
-	  <td>{{limits.StocksLeft}}</td>
+	  <td>{{totalItemsLeft('Stocks')}}</td>
 	</tr>
 	<tr>
 	  <td>Barrels</td>
 	  <td>{{totalItemsSold('Barrels')}}</td>
-	  <td>{{limits.BarrelsLeft}}</td>
+	  <td>{{totalItemsLeft('Barrels')}}</td>
 	</tr>
 </table>
-<div class="{{soldAWholeGun()}}">
+
+<!-- <div class="{{soldAWholeGun()}}">
 	<div data-alert class="alert-box warning round ">
 		You haven't sold a whole gun yet this month.
-	</div>
+	</div> -->
 </div>
 <form name="enterSales"> 
 	<div class="column large-6 medium-6">
 		<label>Location: 
-			<select ng-model="formData.Town" name="Town">
+			<select ng-model="formData.Town" name="Town" ng-init="formData.Town = town[0].TownName">
 				<option ng-repeat="town in towns" value="{{town.TownName}}">{{town.TownName}}</option>
 			</select>
 		</label>
 
 		<div class="row">
 			<div class="column large-4 medium-4">
-			<label>Locks sold:<input name="locks" type="text" ng-pattern="/^[0-9]{1,2}$/" ng-model="formData.LocksSold">
+			<label>Locks sold:<select ng-model='formData.LocksSold' ng-init="formData.LocksSold = 0" ng-options='obj for obj in numberOfLocksLeft'></select>
 			</label>
 			<small class="error" ng-show="enterSales.locks.$error.pattern">The input must be an integer</small>
 			</div>
 			<div class="column large-4 medium-4">
-			<label>Stocks sold:<input name="stocks"type="text" ng-pattern="/^[0-9]{1,2}$/" ng-model="formData.StocksSold">
+			<label>Stocks sold:<select ng-model='formData.StocksSold' ng-init="formData.StocksSold = 0" ng-options='obj for obj in numberOfStocksLeft'></select>
 			</label>
 			<small class="error" ng-show="enterSales.stocks.$error.pattern">The input must be an integer</small>
 			</div>
 			<div class="column large-4 medium-4">
-			<label>Barrels sold:<input name="barrels" type="text" ng-pattern="/^[0-9]{1,2}$/" ng-model="formData.BarrelsSold">
+			<label>Barrels sold:<select ng-model='formData.BarrelsSold' ng-init="formData.BarrelsSold = 0" ng-options='obj for obj in numberOfBarrelsLeft'></select>
 			</label>
 			<small class="error" ng-show="enterSales.barrels.$error.pattern">The input must be an integer</small>
 			</div>

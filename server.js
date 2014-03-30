@@ -30,7 +30,6 @@ var Sales = mongoose.model('sales',{
 
 ///IN MONGOOSE THIS SHITZ NEEDS TO BE PLURALIZED
 var Stock = mongoose.model('stocks',{
-	monthOf : Date,
 	LocksLeft : Number,
 	StocksLeft : Number,
 	BarrelsLeft : Number
@@ -41,10 +40,10 @@ var Towns = mongoose.model('towns',{
 });
 			
 var TestLimits = {
-		monthOf : new Date(),
+	//	monthOf : new Date(),
 		LocksLeft : 70,
 		StocksLeft : 80,
-		BarrelsLeft : 60
+		BarrelsLeft : 90
 	};
 
 
@@ -70,7 +69,7 @@ app.get('/api/sales', function(req, res) {
 		data.sales = sales;
 
 		console.log(sales);
-		Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
+		Stock.find().limit(1).exec(function(err, stock){
 			if (err)
 				console.log(err);
 
@@ -105,9 +104,16 @@ app.post('/api/sales', function(req, res) {
 			if (err) 
 				console.log(err);
 
-			TestLimits.LocksLeft -= parseInt(req.body.LocksSold);
+			var TestLimits = {
+				//	monthOf : new Date(),
+				LocksLeft : 70,
+				StocksLeft : 80,
+				BarrelsLeft : 90
+			};
+
+			/*TestLimits.LocksLeft -= parseInt(req.body.LocksSold);
 			TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
-			TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
+			TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold); */
 
 
 			Sales.find(function(err, sales) {
@@ -120,13 +126,15 @@ app.post('/api/sales', function(req, res) {
 				};
 
 				data.sales = sales;
-				data.limits = TestLimits;
+				
 
-				Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
+				Stock.find().limit(1).exec(function(err, stock){
 					if (err)
 						console.log(err);
 
-					stock[0] = TestLimits;
+					//stock[0] = TestLimits;
+				data.limits = TestLimits;
+
 
 					stock[0].save(function(err){
 						if (err) {
@@ -303,14 +311,15 @@ function createNewMonth(year, month, res){
 
 function initialise (callback) {
 
-	Stock.find().sort({monthOf: -1}).limit(1).exec(function(err, stock){
+	Stock.find().limit(1).exec(function(err, stock){
 		if (err)
 			console.log(err);
 		console.log('helloooooo');
 		console.log(stock);
 		console.log(stock[0]);
-		month = stock[0].monthOf.getMonth() -1;
-		year = stock[0].monthOf.getFullYear();
+		var currentDate = new Date();
+		month = currentDate.getMonth() -1;
+		year = currentDate.getFullYear();
 
 		TestLimits = stock[0];
 
