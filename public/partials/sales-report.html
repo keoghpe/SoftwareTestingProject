@@ -12,9 +12,9 @@
 	</thead>	
 	<tbody ng-repeat="location in sales">
 		<tr>
-			<td><strong>{{location.Town}}</strong></td>
+			<td><strong>{{location.TownName}}</strong></td>
 		</tr>
-		<tr ng-repeat="sale in location.Sales">
+		<tr ng-repeat="sale in location.sales">
 		  <td>{{$index + 1}}</td>
 		  <td>{{sale.DateOfSale}}</td>
 		  <td>{{sale.LocksSold}}</td>
@@ -23,12 +23,12 @@
 		  <td>${{totalLocalSales(sale)}}</td>
 		</tr>
 		<tr>
-		  <td><em>Total Sales for: {{location.Town}}</em></td>
-		  <td><em>Last Sale: {{location.TotalSales[0].DateOfSale}}</em></td>
-		  <td><em>{{location.TotalSales[0].LocksSold}}</em></td>
-		  <td><em>{{location.TotalSales[0].StocksSold}}</em></td>
-		  <td><em>{{location.TotalSales[0].BarrelsSold}}</em></td>
-		  <td><em>${{totalLocalSales(location.TotalSales[0])}}</em></td>
+		  <td><em>Total Sales for: {{location.TownName}}</em></td>
+		  <td><em>Last Sale: {{location.DateOfSale}}</em></td>
+		  <td><em>{{location.LocksSold}}</em></td>
+		  <td><em>{{location.StocksSold}}</em></td>
+		  <td><em>{{location.BarrelsSold}}</em></td>
+		  <td><em>${{totalLocalSales(location)}}</em></td>
 		</tr>
 	</tbody>
 	<tfoot>

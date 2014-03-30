@@ -22,6 +22,29 @@ SalesApp.config(['$routeProvider',
 	}]);
 
 function mainController($scope, $http) {
+
+		$http.get('/api/sales')
+		.success(function(data) {
+			$scope.sales = data.sales;
+			$scope.limits = data.limits;
+			$scope.towns = data.towns;
+
+			$scope.numberOfLocksLeft = [];
+			for (var i=0; i<$scope.totalItemsLeft('Locks')+1; i++) 
+				$scope.numberOfLocksLeft.push(i);
+
+			$scope.numberOfStocksLeft = [];
+			for (var i=0; i<$scope.totalItemsLeft('Stocks')+1; i++) 
+				$scope.numberOfStocksLeft.push(i);
+
+			$scope.numberOfBarrelsLeft = [];
+			for (var i=0; i<$scope.totalItemsLeft('Barrels')+1; i++) 
+				$scope.numberOfBarrelsLeft.push(i);
+		})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+
 	$scope.formData = {};
 	$scope.theDate = new Date();
 	$scope.months = ['January','February','March',
@@ -56,6 +79,25 @@ function mainController($scope, $http) {
 		return totalItems;
 	};
 
+	//Get total items left depending on total stock and how many sold items
+	$scope.totalItemsLeft = function(itemName) {
+
+		var totalItems = 0;
+		var totalItemInStock = 0;
+
+		for (var i = 0; i < $scope.sales.length; i++) {
+			//totalItems += parseInt($scope.sales[i].TotalSales[0][itemName + 'Sold']);
+			totalItems += parseInt($scope.sales[i][itemName+'Sold']);
+		}
+
+		//console.log("Left"+$scope.limits[itemName+'Left']+"Sold "+totalItems);
+
+		totalItemInStock = ($scope.limits[itemName+'Left']) - totalItems;
+
+		return totalItemInStock;
+
+	};
+
 	$scope.totalSales = function(){
 		var totalSales = 0;
 
@@ -76,22 +118,13 @@ function mainController($scope, $http) {
 		return total;
 	};
 
-	$http.get('/api/sales')
-		.success(function(data) {
-			$scope.sales = data.sales;
-			$scope.limits = data.limits;
-			$scope.towns = data.towns;
-		})
-		.error(function(data) {
-			console.log('Error: ' + data);
-		});
-
 	$scope.addSale = function() {
 
-		if (parseInt($scope.formData.LocksSold) > $scope.limits.LocksLeft || 
-			parseInt($scope.formData.StocksSold) > $scope.limits.StocksLeft || 
-			parseInt($scope.formData.BarrelsSold) > $scope.limits.BarrelsLeft) {
+		if (parseInt($scope.formData.LocksSold) > $scope.totalItemsLeft('Locks') || 
+			parseInt($scope.formData.StocksSold) > $scope.totalItemsLeft('Stocks') || 
+			parseInt($scope.formData.BarrelsSold) > $scope.totalItemsLeft('Barrels')) {
 		} else {
+			var limitsLocks = 
 			$http.post('/api/sales', $scope.formData)
 				.success(function(data) {
 					$scope.formData = {}; 
