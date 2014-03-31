@@ -35,9 +35,9 @@
 		<tr>
 			<td>Total:</td>
 			<td></td>
-			<td>${{totalItemSales('Locks')}}</td>
-			<td>${{totalItemSales('Stocks')}}</td>
-			<td>${{totalItemSales('Barrels')}}</td>
+			<td>{{totalItemsSold('Locks')}}</td>
+			<td>{{totalItemsSold('Stocks')}}</td>
+			<td>{{totalItemsSold('Barrels')}}</td>
 			<td>${{totalSales()}}</td>
 		</tr>
 	</tfoot>
@@ -45,7 +45,7 @@
 
 <p>Your commission for this month is: {{calculateCommission(totalSales())}} DOLLLAAAAZZZZ</p>
 
-<div data-alert class="alert-box warning round">
-You didn't sell a whole gun this month.
-  <a href="#" class="close">&times;</a>
-</div>
+ <div class="{{soldAWholeGun()}}">
+	<div data-alert class="alert-box warning round ">
+		You haven't sold a whole gun yet this month.
+	</div>
