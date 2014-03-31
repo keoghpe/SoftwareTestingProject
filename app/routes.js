@@ -4,7 +4,7 @@ var Stock = require('../modules/Stock');
 var SALES = require('../modules/Sales');
 var Users = require('../modules/user');
 
-module.exports = function(app, TestLimits){
+module.exports = function(app, TestLimits, passport){
 
 	var data = {
 			sales : {},
@@ -12,8 +12,17 @@ module.exports = function(app, TestLimits){
 		};
 
 	app.get('/', function(req, res) {
-		res.render('../public/landingPage.html');
+		res.render('landingPage.ejs');
 	});
+
+	app.get('/login', function(req, res) {
+		res.render('login.ejs');
+	});
+
+	app.get('/register', function(req, res) {
+		res.render('register.ejs');
+	});
+
 
 	app.get('/api/sales', function(req, res) {
 
@@ -51,6 +60,13 @@ module.exports = function(app, TestLimits){
 			},
 			handleError);
 	});
+	
+
+	app.post('/register', passport.authenticate('local-signup', {
+		successRedirect : '/profile', // redirect to the secure profile section
+		failureRedirect : '/register', // redirect back to the signup page if there is an error
+		failureFlash : true // allow flash messages
+	}));
 	// post a sale
 	app.post('/api/sales', function(req, res) {
 

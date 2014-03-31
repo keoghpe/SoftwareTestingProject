@@ -12,15 +12,17 @@ var Stock = require('./models/Stock.js');
 var Towns = require('./models/Towns.js');
 
 mongoose.connect(configDB.url);
-//require('./config/passport')('passport');
+require('./config/passport')(passport);
 
 app.configure(function() {
 	app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
 	app.use(express.logger('dev')); 						// log every request to the console
+	app.use( express.cookieParser() );
 	app.use(express.bodyParser()); 							// pull information from html in POST
 	app.use(express.methodOverride()); 
 
-	app.use( express.cookieParser() );
+	app.set('view engine', 'ejs');
+
 	app.use(express.session({secret : 'shutthefackappjustshutthefackapp'}));
 	app.use(passport.initialize());
 	app.use(passport.session());
@@ -34,7 +36,7 @@ var TestLimits = {
 	BarrelsLeft : 60
 };
 
-require('./app/routes.js')(app, TestLimits);
+require('./app/routes.js')(app, TestLimits, passport);
 
 mongoose.connection.on('error', function(err) {
 		console.log(err);
@@ -42,9 +44,9 @@ mongoose.connection.on('error', function(err) {
 
 mongoose.connection.once('open', function() {
 	initialise(function() {
-		app.get('*', function(req, res) {
+		/*app.get('*', function(req, res) {
 			res.sendfile('./public/index.html'); 
-		});
+		});*/
 		var port = process.env.PORT || 8080;
 		app.listen(port);
 		console.log("App listening on port " + port);
