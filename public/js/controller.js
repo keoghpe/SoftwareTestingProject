@@ -23,10 +23,15 @@ SalesApp.config(['$routeProvider',
 
 function mainController($scope, $http) {
 
+	$scope.limits = {
+		"BarrelsLeft" : 90, 
+		"LocksLeft" : 70, 
+		"StocksLeft" : 80 };
+
 		$http.get('/api/sales')
 		.success(function(data) {
 			$scope.sales = data.sales;
-			$scope.limits = data.limits;
+			//$scope.limits = data.limits;
 			$scope.towns = data.towns;
 
 			$scope.numberOfLocksLeft = [];
@@ -124,12 +129,11 @@ function mainController($scope, $http) {
 			parseInt($scope.formData.StocksSold) > $scope.totalItemsLeft('Stocks') || 
 			parseInt($scope.formData.BarrelsSold) > $scope.totalItemsLeft('Barrels')) {
 		} else {
-			var limitsLocks = 
 			$http.post('/api/sales', $scope.formData)
 				.success(function(data) {
 					$scope.formData = {}; 
 					$scope.sales = data.sales;
-					$scope.limits = data.limits;
+				//	$scope.limits = data.limits;
 					console.log(data);
 				})
 				.error(function(data) {
@@ -187,13 +191,19 @@ function mainController($scope, $http) {
 
 		var commission = 0;
 
-		if (sales <= 1000) {
-			commission = sales * .1;
-		} else if (sales <= 1800) {
-			commission = 100 + ((sales - 1000) * .15);
-		} else if (sales > 1800) {
-			commission = 220 + ((sales - 1800) * .2);
+		if($scope.totalItemsSold('Locks') > 0 && $scope.totalItemsSold('Stocks') > 0 && 
+			$scope.totalItemsSold('Barrels') > 0) {
+
+			if (sales <= 1000) {
+				commission = sales * .1;
+			} else if (sales <= 1800) {
+				commission = 100 + ((sales - 1000) * .15);
+			} else if (sales > 1800) {
+				commission = 220 + ((sales - 1800) * .2);
+			}
+
 		}
+
 		return commission;
 	};
 
