@@ -17,10 +17,14 @@
 
 			<h1><span class=""></span> Signup</h1>
 
+			<% if (message.length > 0) { %>
+				<div class="alert alert-danger"><%= message %></div>
+			<% } %>
+
 			<form action="/register" method="post">
 				<div class="">
 					<label>Email</label>
-					<input type="text" class="" name="email">
+					<input type="email" class="" name="email">
 				</div>
 				<div class="">
 					<label>Password</label>

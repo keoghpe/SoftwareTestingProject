@@ -12,7 +12,7 @@ var Stock = require('./models/Stock.js');
 var Towns = require('./models/Towns.js');
 
 mongoose.connect(configDB.url);
-require('./config/passport')(passport);
+require('./config/passport.js')(passport);
 
 app.configure(function() {
 	app.use(express.static(__dirname + '/public')); 		// set the static files location /public/img will be /img for users
