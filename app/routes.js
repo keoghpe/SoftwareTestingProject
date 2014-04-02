@@ -146,7 +146,9 @@ module.exports = function(app, TestLimits, passport){
 	});
 
 	app.get('/logout', function(req, res) {
+		console.log('youve logged');
 		req.logout();
+		console.log(req.isAuthenticated);
 		res.redirect('/');
 	});
 };
@@ -155,8 +157,11 @@ function handleError (err) {
 }
 
 function isLoggedIn(req, res, next){
-	if (req.isAuthenticated)
-		return next;
+
+	console.log(req.isAuthenticated);
+	if (req.isAuthenticated()){
+		return next();
+	}
 
 	res.redirect('/');
 }
