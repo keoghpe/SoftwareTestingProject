@@ -31,8 +31,8 @@ module.exports = function(app, TestLimits){
 				}, handleError);	
 	});
 
-	app.get('/api/sales/:month_number/:year_number', function(req, res) {
-		SALES.getSalesBetween(req.params.month_number, req.params.year_number,
+	app.get('/api/sales/:start_month_number/:start_year_number/:end_month_number/:end_year_number', function(req, res) {
+		SALES.getSalesBetween(req.params.start_month_number, req.params.start_year_number, req.params.end_month_number, req.params.end_year_number,
 			function(sales) {
 				res.json(sales);
 			},

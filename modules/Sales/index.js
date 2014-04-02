@@ -11,12 +11,12 @@ exports.getSales = function(callback, error) {
 	});
 };
 
-exports.getSalesBetween = function(month, year, callback, error) {
+exports.getSalesBetween = function(startmonth, startyear, endmonth, endyear, callback, error) {
 
 	//date object is acting weird because we're in China
     
-	var start = new Date(year, month-1, 2);
-	var end = new Date(year, month, 1);
+	var start = new Date(startyear, startmonth-1, 2);
+	var end = new Date(endyear, endmonth, 1);
 
 	console.log(start);
 	console.log(end);
