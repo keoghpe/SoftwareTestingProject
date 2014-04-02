@@ -31,6 +31,11 @@ function mainController($scope, $http) {
 		$http.get('/api/sales')
 		.success(function(data) {
 			$scope.sales = data.sales;
+
+			$scope.reports = [];
+		//	for (var i=0; sales.length; i++) {
+				
+		//	};
 			//$scope.limits = data.limits;
 			$scope.towns = data.towns;
 
@@ -134,6 +139,19 @@ function mainController($scope, $http) {
 					$scope.formData = {}; 
 					$scope.sales = data.sales;
 				//	$scope.limits = data.limits;
+
+				$scope.numberOfLocksLeft = [];
+				for (var i=0; i<$scope.totalItemsLeft('Locks')+1; i++) 
+					$scope.numberOfLocksLeft.push(i);
+
+				$scope.numberOfStocksLeft = [];
+				for (var i=0; i<$scope.totalItemsLeft('Stocks')+1; i++) 
+					$scope.numberOfStocksLeft.push(i);
+
+				$scope.numberOfBarrelsLeft = [];
+				for (var i=0; i<$scope.totalItemsLeft('Barrels')+1; i++) 
+					$scope.numberOfBarrelsLeft.push(i);
+			
 					console.log(data);
 				})
 				.error(function(data) {
