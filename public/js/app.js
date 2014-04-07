@@ -6,15 +6,15 @@ SalesApp.config(['$routeProvider',
 		$routeProvider.
 		when('/submitSales', {
 			templateUrl:'partials/submit-sales.html',
-			controller: 'mainController'
+			controller: 'salesController'
 		}).
 		when('/salesReport', {
 			templateUrl:'partials/sales-report.html',
-			controller: 'mainController'
+			controller: 'reportController'
 		}).
 		when('/admin', {
 			templateUrl:'partials/admin.html',
-			controller: 'mainController'
+			controller: 'adminController'
 		}).
 		otherwise({
 			redirectTo:'/submitSales'

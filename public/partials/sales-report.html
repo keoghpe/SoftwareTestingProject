@@ -1,4 +1,40 @@
-<h2>Here's your sales report for this month</h2>
+<h2>Here's your sales reports for this year</h2>
+<table>
+	<thead>
+		<tr>
+			  <th>Year, month</th>
+			  <th>Locks sold</th>
+			  <th>Stocks sold</th>
+			  <th>Barrels sold</th>
+			  <th>Total sales</th>
+			  <th>Commission</th>
+		</tr>
+	</thead>	
+	<tbody ng-repeat="(key,value) in reportSales">
+		<tr>
+		  <td><em>{{key}}</em></td>
+		  <td><em>{{value.LocksSold}}</em></td>
+		  <td><em>{{value.StocksSold}}</em></td>
+		  <td><em>{{value.BarrelsSold}}</em></td>
+		  <td><em>${{totalLocalSales(key)}}</em></td>
+		  <td>${{calculateCommission(totalLocalSales(key))}}</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr>
+			<td>Total:</td>
+			<td>{{totalItemsSold('Locks')}}</td>
+			<td>{{totalItemsSold('Stocks')}}</td>
+			<td>{{totalItemsSold('Barrels')}}</td>
+			<td>${{totalSales()}}</td>
+			<td>${{calculateCommission(totalSales())}}</td>
+		</tr>
+	</tfoot>
+</table>
+
+<!-- <p>Your commission for this month is: {{calculateCommission(totalSales())}} DOLLLAAAAZZZZ</p> -->
+
+<!-- <h2>Here's your sales report for this month</h2>
 <table>
 	<thead>
 		<tr>
@@ -50,3 +86,5 @@
 	<div data-alert class="alert-box warning round ">
 		You haven't sold a whole gun yet this month.
 	</div>
+
+	-->

@@ -34,7 +34,17 @@ module.exports = function(app, TestLimits){
 	app.get('/api/sales/:start_month_number/:start_year_number/:end_month_number/:end_year_number', function(req, res) {
 		SALES.getSalesBetween(req.params.start_month_number, req.params.start_year_number, req.params.end_month_number, req.params.end_year_number,
 			function(sales) {
-				res.json(sales);
+				data.sales = sales;
+				res.json(data);
+			},
+			handleError);
+	});
+
+	app.get('/api/sales/report', function(req, res) {
+		SALES.getReportForMonths(
+			function(sales) {
+				data.sales = sales;
+				res.json(data);
 			},
 			handleError);
 	});
@@ -53,8 +63,28 @@ module.exports = function(app, TestLimits){
 				TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
 				TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
 
+			/*	SALES.getSales(
+			
+			function(sales){
+				data.sales = sales;
+
+				Stock.getCurrentStock(function(stock){
+
+					data.limits = stock[0];
+
+					Towns.getTowns(function(twns) {
+
+						data.towns = twns;
+						res.json(data);
+
+						}, handleError);		
+					}, handleError);
+				}, handleError); */
+
 				var today = new Date();
-				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(), function(sales) {
+				// Send back sales for this month
+				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(),
+				 today.getMonth() + 1,today.getFullYear(),function(sales) {
 
 					data.sales = sales;
 
@@ -63,7 +93,7 @@ module.exports = function(app, TestLimits){
 							data.limits = stock;
 							res.json(data);
 							}, handleError);
-				}, handleError);
+				}, handleError); 
 			}, handleError);
 		}
 	});
