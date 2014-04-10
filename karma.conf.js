@@ -5,16 +5,18 @@ module.exports = function(config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
-    basePath: '',
+    basePath: './public',
 
 
-    // frameworks to use
-    frameworks: ['jasmine'],
-
-
+    frameworks : ['jasmine'],
     // list of files / patterns to load in the browser
     files: [
-      
+    './lib/angular.min.js',
+    './lib/angular-*.min.js',
+    '../Test/lib/angular/angular-mocks.js',
+    './js/*.js',
+    './js/controllers/*.js',
+    '../Test/unit/*.js'
     ],
 
 
@@ -54,7 +56,7 @@ module.exports = function(config) {
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['Chrome', 'Firefox'],
+    browsers: ['Firefox'],
 
 
     // If browser does not capture in given timeout [ms], kill it
