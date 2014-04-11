@@ -1,21 +1,39 @@
+function salesController($scope, $http) {
 
-function mainController($scope, $http) {
+	//Initialize sales array
+	$scope.sales = {
+		"LocksSold":0,
+		"StocksSold":0,
+		"BarrelsSold":0
+	}
 
 	$scope.limits = {
 		"BarrelsLeft" : 90, 
 		"LocksLeft" : 70, 
 		"StocksLeft" : 80 };
 
+	$scope.formData = {};
+	$scope.theDate = new Date();
+	$scope.months = ['January','February','March',
+					'April','May','June',
+					'July','August', 'September',
+					'October','November','December'];
+
+	$scope.Prices = {
+		'Locks': 45,
+		'Stocks': 30,
+		'Barrels': 25
+	};
+
+	$scope.soldWholeGun = 'hide';
+
 		$http.get('/api/sales')
 		.success(function(data) {
 			$scope.sales = data.sales;
-
-			$scope.reports = [];
-		//	for (var i=0; sales.length; i++) {
-				
-		//	};
-			//$scope.limits = data.limits;
 			$scope.towns = data.towns;
+
+			$scope.soldWholeGun = $scope.soldAWholeGun();
+			console.log("Sold "+$scope.soldWholeGun);
 
 			$scope.numberOfLocksLeft = [];
 			for (var i=0; i<$scope.totalItemsLeft('Locks')+1; i++) 
@@ -32,19 +50,6 @@ function mainController($scope, $http) {
 		.error(function(data) {
 			console.log('Error: ' + data);
 		});
-
-	$scope.formData = {};
-	$scope.theDate = new Date();
-	$scope.months = ['January','February','March',
-					'April','May','June',
-					'July','August', 'September',
-					'October','November','December'];
-
-	$scope.Prices = {
-		'Locks': 45,
-		'Stocks': 30,
-		'Barrels': 25
-	};
 
 	$scope.totalItemSales = function(itemName){
 
@@ -106,6 +111,24 @@ function mainController($scope, $http) {
 		return total;
 	};
 
+	$scope.getSalesBetweenDates = function() {
+
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = today.getMonth()+1;
+
+			$http.get('/api/sales/2/'+year+'/'+month+'/'+year)
+		.success(function(data) {
+			$scope.sales = data.sales;
+
+			//$scope.towns = data.towns;
+		})
+		.error(function(data) {
+			console.log('Error: ' + data);
+		});
+			
+	};
+
 	$scope.addSale = function() {
 
 		if (parseInt($scope.formData.LocksSold) > $scope.totalItemsLeft('Locks') || 
@@ -138,18 +161,6 @@ function mainController($scope, $http) {
 			}
 	};
 
-	$scope.addTown = function() {
-		$http.post('/api/createTown', $scope.formData)
-			.success(function(data) {
-				$scope.formData = {};
-				$scope.sales = data.sales;
-				console.log(data);
-			})
-			.error(function(data) {
-				console.log('Error: ' + data);
-			});
-	};
-
 	$scope.endMonth = function() {
 		$http.post('/api/endMonth', $scope.formData)
 			.success(function(data) {
@@ -164,17 +175,6 @@ function mainController($scope, $http) {
 			});
 	};
 
-	$scope.deleteTown = function(name) {
-		$http.delete('/api/towns/' + name)
-			.success(function(data) {
-				$scope.towns = data;
-				console.log(data);
-			})
-			.error(function(data) {
-				console.log('Error: ' + data);
-			});
-	};
-
 	function parseDate(dateString){
 		var yearMonth = [dateString[0] + "" + dateString[1] + "" + dateString[2] + "" + dateString[3],
 		dateString[5] + "" + dateString[6]
@@ -182,26 +182,6 @@ function mainController($scope, $http) {
 
 		return yearMonth;
 	}
-
-	$scope.calculateCommission = function(sales) {
-
-		var commission = 0;
-
-		if($scope.totalItemsSold('Locks') > 0 && $scope.totalItemsSold('Stocks') > 0 && 
-			$scope.totalItemsSold('Barrels') > 0) {
-
-			if (sales <= 1000) {
-				commission = sales * .1;
-			} else if (sales <= 1800) {
-				commission = 100 + ((sales - 1000) * .15);
-			} else if (sales > 1800) {
-				commission = 220 + ((sales - 1800) * .2);
-			}
-
-		}
-
-		return commission;
-	};
 
 	$scope.soldAWholeGun = function() {
 

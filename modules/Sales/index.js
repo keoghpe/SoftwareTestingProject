@@ -29,6 +29,24 @@ exports.getSalesBetween = function(startmonth, startyear, endmonth, endyear, cal
 	});
 };
 
+exports.getReportForMonths = function(callback, error) {
+
+    //date object is acting weird because we're in China
+    
+    var start = new Date(startyear, startmonth-1, 2);
+    var end = new Date(endyear, endmonth, 1);
+
+    console.log(start);
+    console.log(end);
+
+    Sales.find({"DateOfSale":{$gte: start, $lte: end}}).exec(function(err, sales){
+        if (err) {
+            error(err);
+        };
+        callback(sales);
+    });
+};
+
 exports.reportSale = function(theSale, callback, error){
     var the_sale = new Sales({
                 DateOfSale : new Date(),
@@ -42,9 +60,8 @@ exports.reportSale = function(theSale, callback, error){
         if(err)
             error(err);
 
-        callback();
+       callback();
     });
-
 };
 
 
