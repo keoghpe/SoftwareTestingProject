@@ -1,51 +1,64 @@
-'use strict';
+describe('Commission Application', function() {
 
-/* https://github.com/angular/protractor/blob/master/docs/getting-started.md */
+    it('should automatically redirect to /submitSales as the default route', function() {
+        browser().navigateTo('/');
+        expect(browser().location().path()).toBe('/submitSales');
+    });
 
+    describe('Submit Sales',function() {
+        beforeEach(function() {
+            browser().navigateTo('/events');
+        });
 
+        it('should render the SubmitSales page', function() {
+            expect(element('h1:first').text()).toMatch(/Stub's GunBook/);
+            expect(element('h2:first').text()).toMatch(/Submit your sales for a town/);
+        });
+    });
 
+    describe('View Report',function() {
+        beforeEach(function() {
+            browser().navigateTo('#/salesReport');
+        });
 
+        it('should render the View Report page', function() {
+            expect(element('h1:first').text()).toMatch(/Stub's GunBook/);
+            expect(element('h2:first').text()).toMatch(/Here's your sales report for this month/);
+        });
 
+        it('should have 26 sales', function() {
+            expect(repeater('tbody').count()).toBe(26);
+        });
+    });
 
-describe('my app', function() {
+    describe('Admin',function() {
+        beforeEach(function() {
+            browser().navigateTo('#/admin');
+        });
 
-  browser.get('index.html');
-
-  it('should automatically redirect to /submitSales when location hash/fragment is empty', function() {
-    
-    browser.navigateTo('/');
-    expect(browser().location().path()).toBe('/events');
-
-        //expect(browser.getLocationAbsUrl()).toMatch("/view1");
-  });
-
-/*
-  describe('view1', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view1');
+        it('should render the View Report page', function() {
+            expect(element('h1:first').text()).toMatch(/Stub's GunBook/);
+            expect(element('h2:first').text()).toMatch(/Welcome to the Awesome Admin Panel/);
+        });
     });
 
 
-    it('should render view1 when user navigates to /view1', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 1/);
+    describe('Navigation', function() {
+
+        it('should navigate to /admin when admin is clicked', function() {
+            element('nav ul li:nth-child(6) a').click();
+            expect(browser().location().path()).toBe('/admin');
+        });
+
+        it('should navigate to /salesReport when View Report is clicked', function() {
+            element('nav ul li:nth-child(4) a').click();
+            expect(browser().location().path()).toBe('/salesReport');
+        });
+
+        it('should navigate to /submitSales when Submit Sales is clicked', function() {
+            element('nav ul li:nth-child(2) a').click();
+            expect(browser().location().path()).toBe('/submitSales');
+        });
     });
 
-  });
-
-
-  describe('view2', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view2');
-    });
-
-
-    it('should render view2 when user navigates to /view2', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 2/);
-    });
-
-  });*/
 });
