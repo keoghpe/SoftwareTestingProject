@@ -15,7 +15,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
     ANGULAR_SCENARIO,
-ANGULAR_SCENARIO_ADAPTER,
+    ANGULAR_SCENARIO_ADAPTER,
       'test/e2e/*.js'
     ],
 
@@ -56,7 +56,9 @@ ANGULAR_SCENARIO_ADAPTER,
     // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
-    browsers: ['PhantomJS', 'Firefox', 'Chrome'],
+    //browsers: ['PhantomJS', 'Firefox', 'Chrome'],
+    browsers: ['PhantomJS', 'Firefox'],
+    
 
 
     // If browser does not capture in given timeout [ms], kill it
