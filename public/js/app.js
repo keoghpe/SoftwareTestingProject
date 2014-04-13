@@ -1,5 +1,5 @@
 var SalesApp = angular.module('SalesApp', [
-	'ngRoute']);
+	'ngRoute','angularCharts']);
 
 SalesApp.config(['$routeProvider',
 	function($routeProvider) {

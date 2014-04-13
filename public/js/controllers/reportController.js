@@ -1,5 +1,7 @@
 function reportController($scope, $http) {
 
+	$scope.user = 1;
+
 	//Initialize sales array
 	$scope.sales = {
 		"LocksSold":0,
@@ -9,6 +11,32 @@ function reportController($scope, $http) {
 
 	$scope.formData = {};
 	$scope.reportSales = {};
+
+	$scope.showGraph = function() {
+
+		console.log("sale "+$scope.totalItemsSold('Locks'));
+		$scope.data = {
+			series: ['Locks', 'Stocks', 'Barrels'],
+			data : [{
+				x : "Products",
+				y: [$scope.totalItemsSold('Locks'), $scope.totalItemsSold('Stocks'), $scope.totalItemsSold('Barrels')]
+			}]     
+		}
+
+		$scope.chartType = 'bar';
+
+		$scope.config = {
+			labels: false,
+			title : "Not Products",
+			legend : {
+				display:true,
+				position:'left'
+			}
+		}
+
+};
+
+	
 	$scope.totalCommissionSum = 0;
 	$scope.theDate = new Date();
 	$scope.months = ['January','February','March',
@@ -90,6 +118,7 @@ function reportController($scope, $http) {
 			$scope.sales = data.sales;
 			$scope.reportContainer = [];
 			$scope.reportSales = {};
+			$scope.reportSalesAllUsers = {};
 
 			// Restructure information in sales and add it to reportSales
 			$scope.sales.forEach(function(entry) {
@@ -108,7 +137,28 @@ function reportController($scope, $http) {
 				}
 			});
 
+			$scope.sales.forEach(function(entry) {
+				var res = entry.DateOfSale.substring(0,7);
+				var salesPerson = entry.SalesPerson;
+				console.log("Person "+entry.SalesPerson); 
+
+				if($scope.reportSalesAllUsers[res] == null) {
+					//Initiate the variable
+					$scope.reportSalesAllUsers[res] = {};
+					$scope.reportSalesAllUsers[res][salesPerson] = {};
+					$scope.reportSalesAllUsers[res][salesPerson].LocksSold = parseInt(entry.LocksSold);
+					$scope.reportSalesAllUsers[res][salesPerson].StocksSold = parseInt(entry.StocksSold);
+					$scope.reportSalesAllUsers[res][salesPerson].BarrelsSold = parseInt(entry.BarrelsSold);
+				} else{
+					$scope.reportSalesAllUsers[res][salesPerson].LocksSold += parseInt(entry.LocksSold);
+					$scope.reportSalesAllUsers[res][salesPerson].StocksSold += parseInt(entry.StocksSold);
+					$scope.reportSalesAllUsers[res][salesPerson].BarrelsSold += parseInt(entry.BarrelsSold);
+				}
+			});
+
 			$scope.reportContainer[0] = $scope.reportSales;
+
+			$scope.showGraph();
 
 			//$scope.totalCommission();
 

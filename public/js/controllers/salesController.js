@@ -27,7 +27,7 @@ function salesController($scope, $http) {
 
 	$scope.soldWholeGun = 'hide';
 
-		$http.get('/api/sales')
+	/*	$http.get('/api/sales')
 		.success(function(data) {
 			$scope.sales = data.sales;
 			$scope.towns = data.towns;
@@ -49,7 +49,7 @@ function salesController($scope, $http) {
 		})
 		.error(function(data) {
 			console.log('Error: ' + data);
-		});
+		}); */
 
 	$scope.totalItemSales = function(itemName){
 
@@ -117,17 +117,34 @@ function salesController($scope, $http) {
 		var year = today.getFullYear();
 		var month = today.getMonth()+1;
 
-			$http.get('/api/sales/2/'+year+'/'+month+'/'+year)
+			$http.get('/api/sales/'+month+'/'+year+'/'+month+'/'+year)
 		.success(function(data) {
 			$scope.sales = data.sales;
+			$scope.towns = data.towns;
 
-			//$scope.towns = data.towns;
+			$scope.soldWholeGun = $scope.soldAWholeGun();
+			console.log("Sold "+$scope.soldWholeGun);
+
+			$scope.numberOfLocksLeft = [];
+			for (var i=0; i<$scope.totalItemsLeft('Locks')+1; i++) 
+				$scope.numberOfLocksLeft.push(i);
+
+			$scope.numberOfStocksLeft = [];
+			for (var i=0; i<$scope.totalItemsLeft('Stocks')+1; i++) 
+				$scope.numberOfStocksLeft.push(i);
+
+			$scope.numberOfBarrelsLeft = [];
+			for (var i=0; i<$scope.totalItemsLeft('Barrels')+1; i++) 
+				$scope.numberOfBarrelsLeft.push(i);
+
 		})
 		.error(function(data) {
 			console.log('Error: ' + data);
 		});
 			
 	};
+
+	$scope.getSalesBetweenDates();
 
 	$scope.addSale = function() {
 
