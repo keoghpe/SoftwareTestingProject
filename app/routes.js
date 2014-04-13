@@ -84,6 +84,14 @@ module.exports = function(app, TestLimits, passport){
 			},
 			handleError);
 	});
+
+	app.get('/api/user', function(req, res) {
+		Users.getUsers(
+			function(users) {
+				res.json(users);
+			},
+			handleError);
+	});
 	
 
 	app.post('/register', passport.authenticate('local-signup', {
@@ -112,26 +120,8 @@ module.exports = function(app, TestLimits, passport){
 				TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
 				TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
 
-			/*	SALES.getSales(
-			
-			function(sales){
-				data.sales = sales;
-
-				Stock.getCurrentStock(function(stock){
-
-					data.limits = stock[0];
-
-					Towns.getTowns(function(twns) {
-
-						data.towns = twns;
-						res.json(data);
-
-						}, handleError);		
-					}, handleError);
-				}, handleError); */
-
 				var today = new Date();
-				// Send back sales for this month
+
 				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(),
 				 today.getMonth() + 1,today.getFullYear(),  req.user.email, function(sales) {
 				 	
@@ -157,16 +147,10 @@ module.exports = function(app, TestLimits, passport){
 
 	app.post('/api/endMonth', function(req, res) {
 
-		Stock.createNewMonth(year, month, function(sales) {
-			res.json(sales);
+		Users.endMonth(req.user.email, function() {
+
+			res.json({CantSell: true});
 		}, handleError);
-	});
-
-	app.post('/api/user', function(req, res) {
-
-		Users.createUser(req.body.userName, function(data) {
-				 res.json(data);
-			}, handleError);
 	});
 
 	app.delete('/api/towns/:town_name', isLoggedIn, function(req, res) {
@@ -184,9 +168,7 @@ module.exports = function(app, TestLimits, passport){
 	});
 
 	app.get('/logout', function(req, res) {
-		console.log('youve logged');
 		req.logout();
-		console.log(req.isAuthenticated);
 		res.redirect('/');
 	});
 };
