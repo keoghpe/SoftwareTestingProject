@@ -2,7 +2,7 @@
   "name": "StubsGuns",
   "version": "0.0.0",
   "description": "Don't read me",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,7 +11,12 @@
   "license": "MIT",
   "dependencies": {
     "express": "~3.4.8",
-    "mongoose": "~3.6.20"
+    "ejs" : "~0.8.5",  
+    "mongoose": "~3.6.20",
+    "passport" : "~0.1.17",     
+    "passport-local" : "~0.1.6",  
+    "connect-flash" : "~0.1.1",   
+    "bcrypt-nodejs" : "latest" 
   },
   "devDependencies": {},
   "repository": {
