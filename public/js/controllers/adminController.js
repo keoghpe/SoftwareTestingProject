@@ -13,6 +13,7 @@ function adminController($scope, $http) {
 
 	};
 
+	// Call getsales on page load
 	$scope.getSales();
 
 	$scope.addTown = function() {

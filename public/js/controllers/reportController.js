@@ -8,6 +8,8 @@ function reportController($scope, $http) {
 	}
 
 	$scope.formData = {};
+	$scope.reportSales = {};
+	$scope.totalCommissionSum = 0;
 	$scope.theDate = new Date();
 	$scope.months = ['January','February','March',
 					'April','May','June',
@@ -27,8 +29,8 @@ function reportController($scope, $http) {
 			$scope.sales = data.sales;
 			$scope.towns = data.towns;
 
-			$scope.soldWholeGun = $scope.soldAWholeGun();
-			console.log("Sold "+$scope.soldWholeGun);
+			//$scope.soldWholeGun = $scope.soldAWholeGun();
+			//console.log("Sold "+$scope.soldWholeGun);
 
 		})
 		.error(function(data) {
@@ -76,6 +78,7 @@ function reportController($scope, $http) {
 		return total;
 	};
 
+
 	$scope.getSalesBetweenDates = function() {
 
 		var today = new Date();
@@ -85,8 +88,10 @@ function reportController($scope, $http) {
 			$http.get('/api/sales/1/'+year+'/'+month+'/'+year)
 		.success(function(data) {
 			$scope.sales = data.sales;
+			$scope.reportContainer = [];
 			$scope.reportSales = {};
 
+			// Restructure information in sales and add it to reportSales
 			$scope.sales.forEach(function(entry) {
 				var res = entry.DateOfSale.substring(0,7); 
 
@@ -103,6 +108,10 @@ function reportController($scope, $http) {
 				}
 			});
 
+			$scope.reportContainer[0] = $scope.reportSales;
+
+			//$scope.totalCommission();
+
 		})
 		.error(function(data) {
 			console.log('Error: ' + data);
@@ -112,20 +121,12 @@ function reportController($scope, $http) {
 
 	$scope.getSalesBetweenDates();
 
-	function parseDate(dateString){
-		var yearMonth = [dateString[0] + "" + dateString[1] + "" + dateString[2] + "" + dateString[3],
-		dateString[5] + "" + dateString[6]
-		];
-
-		return yearMonth;
-	}
-
-	$scope.calculateCommission = function(sales) {
+	$scope.calculateCommission = function(month, sales) {
 
 		var commission = 0;
 
-		if($scope.totalItemsSold('Locks') > 0 && $scope.totalItemsSold('Stocks') > 0 && 
-			$scope.totalItemsSold('Barrels') > 0) {
+		if($scope.reportSales[month].LocksSold > 0 && $scope.reportSales[month].StocksSold > 0 && 
+			$scope.reportSales[month].BarrelsSold > 0) {
 
 			if (sales <= 1000) {
 				commission = sales * .1;
@@ -137,17 +138,28 @@ function reportController($scope, $http) {
 
 		}
 
+		$scope.reportSales[month].totalCommission = commission;
+
 		return commission;
 	};
 
-	$scope.soldAWholeGun = function() {
+	$scope.totalCommission = function() {
 
-		if ($scope.totalItemsSold('Locks') === 0 ||
-			$scope.totalItemsSold('Stocks') === 0 ||
-			$scope.totalItemsSold('Barrels') === 0 ) {
-			return '';
-		} else {
-			return 'hide';	
-		}
-	};
+		var totalCommissionSum = 0;
+
+			$scope.reportContainer.forEach(function(entry) {
+
+					angular.forEach(entry,function(element) {
+
+						totalCommissionSum += element.totalCommission;
+
+					});
+
+
+			});
+
+		return totalCommissionSum;
+
+	}
+
 }
