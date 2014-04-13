@@ -12,7 +12,14 @@ module.exports = function(app, TestLimits, passport){
 		};
 
 	app.get('/', function(req, res) {
-		res.render('landingPage.ejs');
+
+		if (req.isAuthenticated()) {
+			console.log(req.user);
+			res.render('profile.ejs')
+		} else {
+			res.render('landingPage.ejs');
+		}
+
 	});
 
 	app.get('/login', function(req, res) {
@@ -52,7 +59,7 @@ module.exports = function(app, TestLimits, passport){
 	});
 
 	app.get('/api/sales/:month_number/:year_number', function(req, res) {
-		SALES.getSalesBetween(req.params.month_number, req.params.year_number,
+		SALES.getSalesBetween(req.params.month_number, req.params.year_number, req.user.email,
 			function(sales) {
 				res.json(sales);
 			},
@@ -81,21 +88,21 @@ module.exports = function(app, TestLimits, passport){
 	}));
 
 	// post a sale
-	app.post('/api/sales', function(req, res) {
+	app.post('/api/sales', isLoggedIn, function(req, res) {
 
 		if (parseInt(req.body.LocksSold) > TestLimits.LocksLeft || 
 				parseInt(req.body.StocksSold) > TestLimits.StocksLeft || 
 				parseInt(req.body.BarrelsSold) > TestLimits.BarrelsLeft) {
 			} else {
 
-			SALES.reportSale(req.body, function() {
+			SALES.reportSale(req.body, req.user.email, function() {
 
 				TestLimits.LocksLeft -= parseInt(req.body.LocksSold);
 				TestLimits.StocksLeft -= parseInt(req.body.StocksSold);
 				TestLimits.BarrelsLeft -= parseInt(req.body.BarrelsSold);
 
 				var today = new Date();
-				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(), function(sales) {
+				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(), req.user.email, function(sales) {
 
 					data.sales = sales;
 
@@ -158,7 +165,6 @@ function handleError (err) {
 
 function isLoggedIn(req, res, next){
 
-	console.log(req.isAuthenticated);
 	if (req.isAuthenticated()){
 		return next();
 	}

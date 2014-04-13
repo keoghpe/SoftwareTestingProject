@@ -5,7 +5,8 @@ var Sales = mongoose.Schema({
 	LocksSold : Number,
 	StocksSold : Number,
 	BarrelsSold : Number,
-	TownName: String
+	TownName: String,
+	SalesPerson : String
 });
 
 module.exports = mongoose.model('sales', Sales);
