@@ -131,11 +131,7 @@ function salesController($scope, $http) {
 	$scope.endMonth = function() {
 		$http.post('/api/endMonth', $scope.formData)
 			.success(function(data) {
-				console.log(typeof $scope.theDate);
-				$scope.theDate = new Date(parseDate(data.theDate)[0], parseDate(data.theDate)[1]);
-				console.log(parseDate(data.theDate));
-				console.log($scope.theDate.getMonth());
-				console.log($scope.theDate);
+				$scope.monthEnded = data.CantSell;
 			})
 			.error(function(data) {
 				console.log('Error: ' + data);
