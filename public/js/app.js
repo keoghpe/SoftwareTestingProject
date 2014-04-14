@@ -5,7 +5,7 @@ SalesApp.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
 		when('/submitSales', {
-			templateUrl:'partials/submit-sales.html',
+			templateUrl:'partials/submit-sales-user.html',
 			controller: 'salesController'
 		}).
 		when('/salesReport', {

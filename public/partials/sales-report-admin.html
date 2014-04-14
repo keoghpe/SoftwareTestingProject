@@ -1,4 +1,5 @@
 <h2>Here's your sales reports for this year</h2>
+ADMIN
 <table>
 	<thead>
 		<tr>
@@ -16,8 +17,8 @@
 		  <td><em>{{value.LocksSold}}</em></td>
 		  <td><em>{{value.StocksSold}}</em></td>
 		  <td><em>{{value.BarrelsSold}}</em></td>
-		  <td><em>${{totalLocalSales(key)}}</em></td>
-		  <td>${{calculateCommission(key, totalLocalSales(key))}}</td>
+		  <td><em>${{totalLocalSales('reportSalesDates',key)}}</em></td>
+		  <td>${{calculateCommission('reportSalesDates', key, totalLocalSales('reportSalesDates',key))}}</td>
 		</tr>
 	</tbody>
 	<tfoot>
@@ -27,15 +28,14 @@
 			<td>{{totalItemsSold('Stocks')}}</td>
 			<td>{{totalItemsSold('Barrels')}}</td>
 			<td>${{totalSales()}}</td>
-			<td>${{totalCommission()}} </td>
+			<td>${{totalCommission()}}</td>
 		</tr>
 	</tfoot>
 </table>
-
  <table>
 	<thead>
 		<tr>
-			  <th>Year, month</th>
+			  <th>User</th>
 			  <th>Locks sold</th>
 			  <th>Stocks sold</th>
 			  <th>Barrels sold</th>
@@ -49,8 +49,8 @@
 		  <td><em>{{values.LocksSold}}</em></td>
 		  <td><em>{{values.StocksSold}}</em></td>
 		  <td><em>{{values.BarrelsSold}}</em></td>
-		  <td><em>${{totalLocalSales(months[0])}}</em></td>
-		  <td>${{calculateCommission(key, totalLocalSales(key))}}</td>
+		  <td><em>${{totalLocalSalesForUser(key)}}</em></td>
+		  <td>${{calculateCommissionForUser('reportSalesAllUsers', key, totalLocalSalesForUser(key))}}</td>
 		</tr>
 	</tbody>
 	<tfoot>
@@ -60,7 +60,7 @@
 			<td>{{totalItemsSold('Stocks')}}</td>
 			<td>{{totalItemsSold('Barrels')}}</td>
 			<td>${{totalSales()}}</td>
-			<td>${{totalCommission()}} </td>
+			<td>${{totalCommission()}}</td>
 		</tr>
 	</tfoot>
 </table>
