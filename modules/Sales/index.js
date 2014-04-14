@@ -14,9 +14,6 @@ exports.getSales = function(callback, error) {
 exports.getSalesBetween = function(startmonth, startyear, endmonth, endyear, user, callback, error) {
 
 	//date object is acting weird because we're in China
-
-    if(user === adminMail)
-        console.log('FUUUUCCKKKK');
     
 	var start = new Date(startyear, startmonth-1, 2);
 	var end = new Date(endyear, endmonth, 1);

@@ -63,9 +63,20 @@ module.exports = function(app, TestLimits, passport){
 
 			function(sales) {
 				data.sales = sales;
-				res.json(data);
-			},
-			handleError);
+
+				Users.hasEndedMonth(req.user.email, function(hasEndedMonth) {
+
+					data.hasEndedMonth = hasEndedMonth;
+					Towns.getTowns(function(twns) {
+						data.towns = twns;
+
+						Stock.getStock(function(stock) {
+							data.limits = stock;
+							res.json(data);
+						}, handleError);
+					}, handleError);
+				}, handleError);
+			}, handleError);
 	});
 
 	app.get('/api/sales/report', function(req, res) {
@@ -122,8 +133,7 @@ module.exports = function(app, TestLimits, passport){
 
 				var today = new Date();
 
-				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(),
-				 today.getMonth() + 1,today.getFullYear(),  req.user.email, function(sales) {
+				SALES.getSalesBetween(today.getMonth() + 1, today.getFullYear(), today.getMonth() + 1, today.getFullYear(),  req.user.email, function(sales) {
 				 	
 					data.sales = sales;
 
@@ -172,6 +182,7 @@ module.exports = function(app, TestLimits, passport){
 		res.redirect('/');
 	});
 };
+
 function handleError (err) {
 	res.send(err);
 }

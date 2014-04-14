@@ -28,7 +28,6 @@ exports.removeUser = function(userName, callback, error) {
 
 exports.endMonth = function(userName, callback, error) {
 
-
 	Users.update(
 	  {email: userName}, 
 	  {$set: {'hasEndedMonth': true}}, 
@@ -39,19 +38,13 @@ exports.endMonth = function(userName, callback, error) {
 		callback();
 	  });
 };
-/*
-exports.startMonth = function(callback, error) {
-	Users.find().exec(function(err, Users){
-		if (err) {
-			error(err);
-		};
 
-		User[0] = new User({
-			email : User[0].email,
-			password : User[0].password,
-			hasEndedMonth : false
-		});
-		callback();
+exports.hasEndedMonth = function(userName, callback, error) {
+	Users.findOne({email: userName}, function(err, user) {
+		if(err){
+			error(err);
+		}
+
+		callback(user.hasEndedMonth);
 	});
 };
-*/

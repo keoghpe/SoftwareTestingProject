@@ -9,53 +9,62 @@
 	<tr>
 	  <td>Locks</td>
 	  <td>{{totalItemsSold('Locks')}}</td>
-	  <td>{{totalItemsLeft('Locks')}}</td>
+	  <td>{{numberOfLocksLeft}}</td>
 	</tr>
 	<tr>
 	  <td>Stocks</td>
 	  <td>{{totalItemsSold('Stocks')}}</td>
-	  <td>{{totalItemsLeft('Stocks')}}</td>
+	  <td>{{numberOfStocksLeft}}</td>
 	</tr>
 	<tr>
 	  <td>Barrels</td>
 	  <td>{{totalItemsSold('Barrels')}}</td>
-	  <td>{{totalItemsLeft('Barrels')}}</td>
+	  <td>{{numberOfBarrelsLeft}}</td>
 	</tr>
 </table>
 
- <div class="{{soldWholeGun}}">
+ <div class="">
 	<div data-alert class="alert-box warning round ">
-		You haven't sold a whole gun yet this month.
+		<img src="./img/AK47stock.svg" class="{{totalItemsSold('Stocks') ? '': 'transparent'}}" alt="">
+		<img src="./img/AK47lock.svg" class="{{totalItemsSold('Locks') ? '': 'transparent'}}" alt="">
+		<img src="./img/AK47barrel.svg" class="{{totalItemsSold('Barrels') ? '': 'transparent'}}" alt="">
+		<p>You haven't sold a whole gun yet this month.</p>
+	</div>
+</div>
+
+ <div ng-show="monthEnded">
+	<div data-alert class="alert-box info radius">
+		You have already ended the sales for this month.
 	</div>
 </div>
 <form name="enterSales"> 
 	<div class="column large-6 medium-6">
 		<label>Location: 
-			<select ng-model="formData.Town" name="Town" ng-init="formData.Town = town[0].TownName">
-				<option ng-repeat="town in towns" value="{{town.TownName}}">{{town.TownName}}</option>
+			<select ng-disabled="monthEnded" ng-model="formData.Town" name="Town" ng-init="formData.Town = town[0].TownName">
+				<option  ng-repeat="town in towns" value="{{town.TownName}}">{{town.TownName}}</option>
 			</select>
 		</label>
 
 		<div class="row">
 			<div class="column large-4 medium-4">
-			<label>Locks sold:<select ng-model='formData.LocksSold' ng-init="formData.LocksSold = 0" ng-options='obj for obj in numberOfLocksLeft'></select>
+			<label>Locks sold:<select ng-disabled="monthEnded" ng-model='formData.LocksSold' ng-init="formData.LocksSold = 0" ng-options='obj for obj in getArrayOfSize(numberOfLocksLeft)'></select>
 			</label>
 			<small class="error" ng-show="enterSales.locks.$error.pattern">The input must be an integer</small>
 			</div>
 			<div class="column large-4 medium-4">
-			<label>Stocks sold:<select ng-model='formData.StocksSold' ng-init="formData.StocksSold = 0" ng-options='obj for obj in numberOfStocksLeft'></select>
+			<label>Stocks sold:<select ng-disabled="monthEnded" ng-model='formData.StocksSold' ng-init="formData.StocksSold = 0" ng-options='obj for obj in getArrayOfSize(numberOfStocksLeft)'></select>
 			</label>
 			<small class="error" ng-show="enterSales.stocks.$error.pattern">The input must be an integer</small>
 			</div>
 			<div class="column large-4 medium-4">
-			<label>Barrels sold:<select ng-model='formData.BarrelsSold' ng-init="formData.BarrelsSold = 0" ng-options='obj for obj in numberOfBarrelsLeft'></select>
+			<label>Barrels sold:<select  ng-disabled="monthEnded" ng-model='formData.BarrelsSold' ng-init="formData.BarrelsSold = 0" ng-options='obj for obj in getArrayOfSize(numberOfBarrelsLeft)'></select>
 			</label>
 			<small class="error" ng-show="enterSales.barrels.$error.pattern">The input must be an integer</small>
 			</div>
 			
 		</div>
-		<button ng-click="addSale()">Submit your sales</button>
-		<button ng-click="endMonth()">End Month</button>
+		<button ng-disabled="monthEnded" ng-click="addSale()">Submit your sales</button>
+		<button ng-disabled="monthEnded" ng-click="endMonth()">End Month</button>
 	</div>
 
 </form>

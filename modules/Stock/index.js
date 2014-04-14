@@ -51,3 +51,12 @@ function getLatest(callback, error) {
 		callback(stock);
 	});
 };
+
+exports.getStock = function (callback, error) {
+	Stock.findOne().exec(function(err, stock) {
+		if (err) {
+			error(err);
+		};
+		callback(stock);
+	});
+};
