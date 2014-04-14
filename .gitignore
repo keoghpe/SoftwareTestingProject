@@ -1,0 +1,21 @@
+\#*#
+.#*
+*~
+.DS_Store
+Thumbs.db
+*.bak
+
+# LaTeX temp stuff
+*.aux
+*.log
+*.synctex.gz
+*.nav
+*.out
+*.snm
+*.toc
+*.out
+*.pyg
+
+# BibTeX
+*.bbl
+*.blg
