@@ -48,3 +48,11 @@ exports.hasEndedMonth = function(userName, callback, error) {
 		callback(user.hasEndedMonth);
 	});
 };
+
+exports.resetUserValues = function(callback, error) {
+	var conditions = {}
+	  , update = { hasEndedMonth : false }
+	  , options = { multi: true };
+
+	Users.update(conditions, update, options, callback);
+};

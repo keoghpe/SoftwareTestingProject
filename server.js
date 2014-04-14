@@ -6,6 +6,7 @@ var app      = express(); 								// create our app w/ express
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
+var schedule=  require('node-schedule');
 var configDB = require('./config/database.js');
 var Sales = require('./models/Sales.js');
 var Stock = require('./models/Stock.js');
@@ -38,7 +39,7 @@ var TestLimits = {
 	BarrelsLeft : 60
 };
 
-require('./app/routes.js')(app, TestLimits, passport);
+require('./app/routes.js')(app, TestLimits, passport, schedule);
 
 mongoose.connection.on('error', function(err) {
 	console.log(err);

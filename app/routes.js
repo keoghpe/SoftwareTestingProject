@@ -5,7 +5,38 @@ var SALES = require('../modules/Sales');
 var Users = require('../modules/user');
 
 var adminMail = 'admin@admin.com';
-module.exports = function(app, TestLimits, passport){
+module.exports = function(app, TestLimits, passport, schedule){
+
+	var rule = new schedule.RecurrenceRule();
+	rule.months = 1;
+
+	schedule.scheduleJob(rule, function(){
+		Users.resetUserValues(function(err, numAff) {
+			if(err)
+				console.log(err);
+			Stock.resetStockValues(function (err, numAff) {
+				if (err)
+					console.log(err);
+
+
+				console.log(numAff);
+			}
+				,console.log);
+		}, console.log);
+	});
+
+	app.get('/hey/hey/you/you/', function(req, res) {
+		Users.resetUserValues(function(err, numAff) {
+			if(err)
+				res.send(err);
+			Stock.resetStockValues(function (err, numAff) {
+				if (err)
+					res.send(err);
+				res.send(numAff);
+			}
+				,res.send);
+		}, res.send);
+	});
 
 	var data = {
 			sales : {},
@@ -151,10 +182,10 @@ module.exports = function(app, TestLimits, passport){
 					data.sales = sales;
 
 					Stock.updateStock(TestLimits ,
-						function(stock){
-							data.limits = stock;
+						function(err, numAff){
+							data.limits = TestLimits;
 							res.json(data);
-							}, handleError);
+					}, handleError);
 				}, handleError); 
 			}, handleError);
 		}

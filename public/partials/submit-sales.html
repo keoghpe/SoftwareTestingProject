@@ -22,12 +22,12 @@
 	  <td>{{numberOfBarrelsLeft}}</td>
 	</tr>
 </table>
+<img src="./img/AK47stock.svg" class="{{totalItemsSold('Stocks') ? '': 'transparent'}}" alt="">
+<img src="./img/AK47lock.svg" class="{{totalItemsSold('Locks') ? '': 'transparent'}}" alt="">
+<img src="./img/AK47barrel.svg" class="{{totalItemsSold('Barrels') ? '': 'transparent'}}" alt="">
 
- <div class="">
+ <div class="{{soldAWholeGun()}}">
 	<div data-alert class="alert-box warning round ">
-		<img src="./img/AK47stock.svg" class="{{totalItemsSold('Stocks') ? '': 'transparent'}}" alt="">
-		<img src="./img/AK47lock.svg" class="{{totalItemsSold('Locks') ? '': 'transparent'}}" alt="">
-		<img src="./img/AK47barrel.svg" class="{{totalItemsSold('Barrels') ? '': 'transparent'}}" alt="">
 		<p>You haven't sold a whole gun yet this month.</p>
 	</div>
 </div>

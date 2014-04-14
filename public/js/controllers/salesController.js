@@ -103,9 +103,9 @@ function salesController($scope, $http) {
 
 	$scope.addSale = function() {
 
-		if (parseInt($scope.formData.LocksSold) > $scope.limits.LocksLeft || 
-			parseInt($scope.formData.StocksSold) > $scope.limits.StocksLeft || 
-			parseInt($scope.formData.BarrelsSold) > $scope.limits.BarrelsLeft) {
+		if (parseInt($scope.formData.LocksSold) > $scope.numberOfLocksLeft || 
+			parseInt($scope.formData.StocksSold) > $scope.numberOfStocksLeft || 
+			parseInt($scope.formData.BarrelsSold) > $scope.numberOfBarrelsLeft) {
 		} else {
 			$http.post('/api/sales', $scope.formData)
 				.success(function(data) {
