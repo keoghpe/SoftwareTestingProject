@@ -4,6 +4,7 @@ var Stock = require('../modules/Stock');
 var SALES = require('../modules/Sales');
 var Users = require('../modules/user');
 
+var adminMail = 'admin@admin.com';
 module.exports = function(app, TestLimits, passport){
 
 	var data = {
@@ -14,8 +15,14 @@ module.exports = function(app, TestLimits, passport){
 	app.get('/', function(req, res) {
 
 		if (req.isAuthenticated()) {
-			console.log(req.user);
-			res.render('profile.ejs')
+
+			console.log(req.user.email);
+			console.log(adminMail);
+			if (req.user.email === adminMail) {
+				res.render('adminprofile.ejs')
+			} else {
+				res.render('profile.ejs')	
+			}
 		} else {
 			res.render('landingPage.ejs');
 		}
@@ -31,9 +38,15 @@ module.exports = function(app, TestLimits, passport){
 	});
 
 	app.get('/profile', isLoggedIn, function(req, res) {
-		res.render('profile.ejs', {
-			user : req.user // get the user out of session and pass to template
-		});
+		if (req.user.email === adminMail) {
+				res.render('adminprofile.ejs' ,{
+					user : req.user // get the user out of session and pass to template
+				});
+			} else {
+				res.render('profile.ejs' ,{
+					user : req.user // get the user out of session and pass to template
+				});
+			}
 	});
 
 
