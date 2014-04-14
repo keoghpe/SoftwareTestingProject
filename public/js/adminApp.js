@@ -5,7 +5,7 @@ AdminApp.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
 		when('/salesReport', {
-			templateUrl:'partials/sales-report.html',
+			templateUrl:'partials/sales-report-admin.html',
 			controller: 'reportController'
 		}).
 		when('/admin', {
