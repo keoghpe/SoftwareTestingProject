@@ -11,12 +11,17 @@
 </head>
 <body>
 
-	<div class="row">
-		<h1>Welcome to Stub's</h1>
+	<h1 id="responsive_headline">Welcome to Stub's</h1>
 
+	<div class="row">
 		<a href="/login" class="button">Login</a>
 		<a href="/signup" class="button">Signup</a>
 	</div>
 	<script type="text/javascript" src="./js/modernizr.js"></script>
+	<script type="text/javascript" src="./lib/jquery-1.11.0.min.js"></script>
+	<script type="text/javascript" src="./lib/jquery.fittext.js"></script>
+	<script>
+	  jQuery("#responsive_headline").fitText();
+	</script>
 </body>
 </html>

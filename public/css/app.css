@@ -2,3 +2,42 @@
   height: 400px;
   width: 800px;
 }
+
+
+html body{
+	background: #111;
+}
+@font-face{ 
+	font-family: 'MyWebFont';
+	src: url('ARMY_RUST.ttf');
+	src: url('./ARMY_RUST.ttf') format('truetype');
+}
+
+h1 { font-family: 'MyWebFont', Arial, sans-serif;
+	color: #fff; }
+
+h2 ,h3, h4, p, label{
+	color: #fff;
+}
+a {
+	color: #8B0000;
+}
+a:hover{
+	color: #fff;
+}
+
+button, .button{
+	background-color:  #8B0000;
+}
+
+button:hover, button:focus, .button:hover, .button:focus,{
+	background-color:  #8B0000;
+	color: #111;
+}
+
+.buttonpad{
+	padding-top: 10%;
+	padding-bottom: 20%;
+	background-image: url('../img/gun-buyback-2012jpg-944c1371db73c05c.jpg');
+	background-size: cover;
+}

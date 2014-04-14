@@ -1,4 +1,7 @@
 <h2>Here's your sales reports for this year</h2>
+  <div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div></br> 
+
+    <div ac-chart="chartType2" ac-data="data2" ac-config="config2" id='chart2' class='chart'></div> 
 <table>
 	<thead>
 		<tr>
@@ -64,64 +67,3 @@
 	</tfoot>
 </table>
  <!--<div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div> -->
-  <div ac-chart="chartType" ac-data="data" ac-config="config" id='chart' class='chart'></div></br> 
-
-    <div ac-chart="chartType2" ac-data="data2" ac-config="config2" id='chart2' class='chart'></div> 
-
-
-<!-- <p>Your commission for this month is: {{calculateCommission(totalSales())}} DOLLLAAAAZZZZ</p> -->
-
-<!-- <h2>Here's your sales report for this month</h2>
-<table>
-	<thead>
-		<tr>
-		  <th>Town</th>
-		  <th>Date</th>
-		  <th>Locks Sold</th>
-		  <th>Stocks Sold</th>
-		  <th>Barrels Sold</th>
-		  <th>Total Sales</th>
-		</tr>
-	</thead>	
-	<tbody ng-repeat="location in sales">
-		<tr>
-			<td><strong>{{location.TownName}}</strong></td>
-		</tr>
-		<tr ng-repeat="sale in location.sales">
-		  <td>{{$index + 1}}</td>
-		  <td>{{sale.DateOfSale}}</td>
-		  <td>{{sale.LocksSold}}</td>
-		  <td>{{sale.StocksSold}}</td>
-		  <td>{{sale.BarrelsSold}}</td>
-		  <td>${{totalLocalSales(sale)}}</td>
-		</tr>
-		<tr>
-		  <td><em>Total Sales for: {{location.TownName}}</em></td>
-		  <td><em>Last Sale: {{location.DateOfSale}}</em></td>
-		  <td><em>{{location.LocksSold}}</em></td>
-		  <td><em>{{location.StocksSold}}</em></td>
-		  <td><em>{{location.BarrelsSold}}</em></td>
-		  <td><em>${{totalLocalSales(location)}}</em></td>
-		</tr>
-	</tbody>
-	<tfoot>
-		<tr>
-			<td>Total:</td>
-			<td></td>
-			<td>{{totalItemsSold('Locks')}}</td>
-			<td>{{totalItemsSold('Stocks')}}</td>
-			<td>{{totalItemsSold('Barrels')}}</td>
-			<td>${{totalSales()}}</td>
-		</tr>
-	</tfoot>
-</table>
-
-
-<p>Your commission for this month is: {{calculateCommission(totalSales())}} DOLLLAAAAZZZZ</p>
-
- <div class="{{soldAWholeGun()}}">
-	<div data-alert class="alert-box warning round ">
-		You haven't sold a whole gun yet this month.
-	</div>
-
-	-->
