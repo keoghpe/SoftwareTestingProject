@@ -103,6 +103,8 @@ function salesController($scope, $http) {
 
 	$scope.addSale = function() {
 
+		console.log($scope.formData);
+
 		if (parseInt($scope.formData.LocksSold) > $scope.numberOfLocksLeft || 
 			parseInt($scope.formData.StocksSold) > $scope.numberOfStocksLeft || 
 			parseInt($scope.formData.BarrelsSold) > $scope.numberOfBarrelsLeft) {
@@ -111,7 +113,12 @@ function salesController($scope, $http) {
 				.success(function(data) {
 					$scope.formData = {}; 
 					$scope.sales = data.sales;
-					$scope.limits = data.limits;
+					
+					$scope.numberOfLocksLeft = data.limits.LocksLeft;
+
+					$scope.numberOfStocksLeft = data.limits.StocksLeft;
+
+					$scope.numberOfBarrelsLeft = data.limits.BarrelsLeft;
 
 					console.log(data);
 				})
