@@ -10,18 +10,39 @@ function reportController($route, $scope, $http) {
 		"StocksSold":0,
 		"BarrelsSold":0
 	}
-
+	$scope.salesPersons = [];
+	$scope.salesDate = [];
+	$scope.itemsForMonthUser = [];
 	$scope.formData = {};
 	$scope.reportSales = {};
 
-	$scope.showGraph = function() {
+	$scope.showGraphUser = function() {
 
 		$scope.data = {
 			series: ['Locks', 'Stocks', 'Barrels'],
-			data : [{
-				x : "Products",
-				y: [$scope.totalItemsSold('Locks'), $scope.totalItemsSold('Stocks'), $scope.totalItemsSold('Barrels')]
-			}]     
+			data : $scope.itemsForMonthUser    
+		}
+
+		$scope.chartType = 'bar';
+
+		$scope.config = {
+			labels: false,
+			title : "Items sold",
+			legend : {
+				display:true,
+				position:'left'
+			}
+		}
+
+
+
+	};
+
+	$scope.showGraphAdmin = function() {
+
+		$scope.data = {
+			series: ['Locks', 'Stocks', 'Barrels'],
+			data : $scope.salesPersons
 		}
 
 		$scope.chartType = 'bar';
@@ -35,7 +56,23 @@ function reportController($route, $scope, $http) {
 			}
 		}
 
-};
+		$scope.data2 = {
+			series: ['Sales'],
+			data : $scope.salesDate
+		}
+
+		$scope.chartType2 = 'line';
+
+		$scope.config2 = {
+			labels: false,
+			title : "Dates",
+			legend : {
+				display:true,
+				position:'left'
+			}
+		}
+
+	};
 
 	
 	$scope.totalCommissionSum = 0;
@@ -50,21 +87,6 @@ function reportController($route, $scope, $http) {
 		'Stocks': 30,
 		'Barrels': 25
 	};
-
-/*	$scope.soldWholeGun = 'hide';
-
-		$http.get('/api/sales')
-		.success(function(data) {
-			$scope.sales = data.sales;
-			$scope.towns = data.towns;
-
-			//$scope.soldWholeGun = $scope.soldAWholeGun();
-			//console.log("Sold "+$scope.soldWholeGun);
-
-		})
-		.error(function(data) {
-			console.log('Error: ' + data);
-		}); */
 
 	$scope.totalItemSales = function(itemName){
 
@@ -140,8 +162,8 @@ function reportController($route, $scope, $http) {
 			$scope.sales = data.sales;
 			$scope.reportContainer = [];
 			$scope.reportSales = {};
-
-			$scope.showGraph();
+			$scope.dates = {};
+			$scope.products = [];
 
 			// Restructure information in sales and add it to reportSales
 			$scope.sales.forEach(function(entry) {
@@ -160,8 +182,15 @@ function reportController($route, $scope, $http) {
 				}
 			});
 
-			$scope.reportContainer[0] = $scope.reportSales;
+			angular.forEach($scope.reportSales,function(value,key) {
 
+				$scope.itemsForMonthUser.push({'x' : key,'y': [value.LocksSold,value.StocksSold,value.BarrelsSold]});
+
+
+			});
+
+
+			$scope.reportContainer[0] = $scope.reportSales;
 			//$scope.totalCommission();
 
 		})
@@ -177,12 +206,12 @@ function reportController($route, $scope, $http) {
 		.success(function(data) {
 			$scope.sales = data.sales;
 
-			$scope.showGraph();
 			$scope.reportContainer = [];
 			//$scope.reportSales = {};
 			$scope.reportSalesAllUsers = {};
 
 			$scope.reportSalesDates = {};
+
 			//$scope.reportSalesAllUsers = {};
 
 			// Restructure information in sales and add it to reportSales
@@ -202,6 +231,13 @@ function reportController($route, $scope, $http) {
 				}
 			});
 
+				angular.forEach($scope.reportSalesDates,function(value,key) {
+
+				$scope.salesDate.push({'x' : key,'y': [$scope.totalLocalSales('reportSalesDates',key)]});
+
+
+			}); 
+
 					$scope.sales.forEach(function(entry) {
 				var res = entry.DateOfSale.substring(0,7);
 				var salesPerson = entry.SalesPerson;
@@ -210,6 +246,7 @@ function reportController($route, $scope, $http) {
 					//Initiate the variable
 					//$scope.reportSalesAllUsers[res] = {};
 					$scope.reportSalesAllUsers[salesPerson] = {};
+					//$scope.salesPersons.push({'x' : salesPerson,'y': [entry.LocksSold,entry.StocksSold, entry.BarrelsSold]});
 					$scope.reportSalesAllUsers[salesPerson].LocksSold = parseInt(entry.LocksSold);
 					$scope.reportSalesAllUsers[salesPerson].StocksSold = parseInt(entry.StocksSold);
 					$scope.reportSalesAllUsers[salesPerson].BarrelsSold = parseInt(entry.BarrelsSold);
@@ -219,6 +256,16 @@ function reportController($route, $scope, $http) {
 					$scope.reportSalesAllUsers[salesPerson].BarrelsSold += parseInt(entry.BarrelsSold);
 				}
 			}); 
+
+			angular.forEach($scope.reportSalesAllUsers,function(value,key) {
+
+				$scope.salesPersons.push({'x' : key,'y': [value.LocksSold,value.StocksSold, value.BarrelsSold]});
+
+
+			}); 
+
+
+
 
 			$scope.reportContainer[0] = $scope.reportSalesDates;
 
@@ -234,8 +281,10 @@ function reportController($route, $scope, $http) {
 	// Check if user or admin is logged in and fetch data for user
 	if($scope.currentURL.contains("sales-report-user")) {
 			$scope.getSalesBetweenDates();	
+			$scope.showGraphUser();
 	} else if($scope.currentURL.contains("sales-report-admin")) {
 			$scope.getSales();
+			$scope.showGraphAdmin();
 	}
 
 	$scope.calculateCommission = function(salesArray,month, sales) {
