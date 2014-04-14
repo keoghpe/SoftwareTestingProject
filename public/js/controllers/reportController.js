@@ -1,6 +1,8 @@
-function reportController($scope, $http) {
+function reportController($route, $scope, $http) {
+	this.$route = $route;
 
-	$scope.user = 1;
+	//Get current page
+	$scope.currentURL = $route.current.templateUrl;
 
 	//Initialize sales array
 	$scope.sales = {
@@ -14,7 +16,6 @@ function reportController($scope, $http) {
 
 	$scope.showGraph = function() {
 
-		console.log("sale "+$scope.totalItemsSold('Locks'));
 		$scope.data = {
 			series: ['Locks', 'Stocks', 'Barrels'],
 			data : [{
@@ -27,7 +28,7 @@ function reportController($scope, $http) {
 
 		$scope.config = {
 			labels: false,
-			title : "Not Products",
+			title : "Products sold",
 			legend : {
 				display:true,
 				position:'left'
@@ -136,13 +137,14 @@ function reportController($scope, $http) {
 
 			$http.get('/api/sales/1/'+year+'/'+month+'/'+year)
 		.success(function(data) {
-			$scope.salesForUser = data.sales;
+			$scope.sales = data.sales;
 			$scope.reportContainer = [];
 			$scope.reportSales = {};
-			//$scope.reportSalesAllUsers = {};
+
+			$scope.showGraph();
 
 			// Restructure information in sales and add it to reportSales
-			$scope.salesForUser.forEach(function(entry) {
+			$scope.sales.forEach(function(entry) {
 				var res = entry.DateOfSale.substring(0,7); 
 
 				if($scope.reportSales[res] == null) {
@@ -203,10 +205,8 @@ function reportController($scope, $http) {
 					$scope.sales.forEach(function(entry) {
 				var res = entry.DateOfSale.substring(0,7);
 				var salesPerson = entry.SalesPerson;
-				console.log("Person "+entry.SalesPerson); 
 
 				if($scope.reportSalesAllUsers[salesPerson] == null) {
-					console.log("Success: Person "+salesPerson); 
 					//Initiate the variable
 					//$scope.reportSalesAllUsers[res] = {};
 					$scope.reportSalesAllUsers[salesPerson] = {};
@@ -231,9 +231,12 @@ function reportController($scope, $http) {
 			
 	};
 
-	//$scope.getSalesBetweenDates();
-	$scope.getSales();
-
+	// Check if user or admin is logged in and fetch data for user
+	if($scope.currentURL.contains("sales-report-user")) {
+			$scope.getSalesBetweenDates();	
+	} else if($scope.currentURL.contains("sales-report-admin")) {
+			$scope.getSales();
+	}
 
 	$scope.calculateCommission = function(salesArray,month, sales) {
 
