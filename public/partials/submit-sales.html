@@ -1,35 +1,51 @@
 <h2>Submit your sales for a town</h2>
 <h3>Sales for {{months[theDate.getMonth()]}}, {{theDate.getFullYear()}}</h3>
-<table>
-	<tr>
-	  <th>Product Name</th>
-	  <th>Sold this month</th>
-	  <th>Left in Stock</th>
-	</tr>
-	<tr>
-	  <td>Locks</td>
-	  <td>{{totalItemsSold('Locks')}}</td>
-	  <td>{{numberOfLocksLeft}}</td>
-	</tr>
-	<tr>
-	  <td>Stocks</td>
-	  <td>{{totalItemsSold('Stocks')}}</td>
-	  <td>{{numberOfStocksLeft}}</td>
-	</tr>
-	<tr>
-	  <td>Barrels</td>
-	  <td>{{totalItemsSold('Barrels')}}</td>
-	  <td>{{numberOfBarrelsLeft}}</td>
-	</tr>
-</table>
+<div class="row">
+<div class="text-center">
 <img src="./img/AK47stock.svg" class="{{totalItemsSold('Stocks') ? '': 'transparent'}}" alt="">
 <img src="./img/AK47lock.svg" class="{{totalItemsSold('Locks') ? '': 'transparent'}}" alt="">
-<img src="./img/AK47barrel.svg" class="{{totalItemsSold('Barrels') ? '': 'transparent'}}" alt="">
-
- <div class="{{soldAWholeGun()}}">
-	<div data-alert class="alert-box warning round ">
-		<p>You haven't sold a whole gun yet this month.</p>
+<img src="./img/AK47barrel.svg" class="{{totalItemsSold('Barrels') ? '': 'transparent'}}" alt=""></div>
+</div>
+<div class="row">
+	<div class="small-6 columns"><table>
+			<tr>
+			  <th>Product Name</th>
+			  <th>Sold this month</th>
+			  <th>Left in Stock</th>
+			</tr>
+			<tr>
+			  <td>Locks</td>
+			  <td>{{totalItemsSold('Locks')}}</td>
+			  <td>{{numberOfLocksLeft}}</td>
+			</tr>
+			<tr>
+			  <td>Stocks</td>
+			  <td>{{totalItemsSold('Stocks')}}</td>
+			  <td>{{numberOfStocksLeft}}</td>
+			</tr>
+			<tr>
+			  <td>Barrels</td>
+			  <td>{{totalItemsSold('Barrels')}}</td>
+			  <td>{{numberOfBarrelsLeft}}</td>
+			</tr>
+		</table>
 	</div>
+	
+
+<div class="small-6 columns">	 
+	<div class="{{soldAWholeGun()}}">
+		<div data-alert class="alert-box warning round ">
+			<p>You haven't sold a whole gun yet this month.</p>
+			<p ng-show="monthEnded">YOU CANNOT COLLECT YOUR COMMISION FOR THIS MONTH >:-(</p>
+		</div>
+	</div>
+	 <div ng-show="monthEnded">
+		<div data-alert class="alert-box info radius">
+			You have already ended the sales for this month.
+		</div>
+	</div>
+</div>
+
 </div>
 
  <div ng-show="monthEnded">

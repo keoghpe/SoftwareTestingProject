@@ -1,11 +1,12 @@
 .chart {
-  height: 400px;
-  width: 800px;
+  height: 300px;
+  width: 600px;
 }
 
 
 html body{
 	background: #111;
+	color: #fff;
 }
 @font-face{ 
 	font-family: 'MyWebFont';
@@ -40,4 +41,20 @@ button:hover, button:focus, .button:hover, .button:focus,{
 	padding-bottom: 20%;
 	background-image: url('../img/gun-buyback-2012jpg-944c1371db73c05c.jpg');
 	background-size: cover;
+}
+
+.axis {
+	color: white;
+	background-color: white;
+}
+
+text{
+	fill: white;
+	color: white;
+	background-color: white;
+}
+
+.tick{
+	color: white;
+	background-color: white;
 }

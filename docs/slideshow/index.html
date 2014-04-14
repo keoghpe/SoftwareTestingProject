@@ -56,7 +56,6 @@
 				<section>
 					<section>
 						<img src="img/karma.png" alt="">
-							<h3 class="fragment">...is a bitch</h3>
 							</br></br>
 							<p style="font-size:20px;">"On the AngularJS team, we rely on testing and we always seek better tools to make our life easier.</p> <p style="font-size:20px;"> That's why we created
 								Karma - a test runner that fits all our needs."</p> 
@@ -71,8 +70,25 @@
 						</ul>
 					</section>
 					<section>
-						<h1>*Examples of tests *</h1>
-						<p>*IMAGE*</p>
+						<h1>Karma Tests</h1>
+						<code class="javascript" contenteditable="" style="font-size: 18px; margin-top: 20px;" data-trim="">
+
+describe('Logging In As A Regular User', function(){
+    beforeEach(function() {
+        browser().navigateTo('/login');
+    });
+
+    afterEach(function (argument) {
+        element('nav ul li:nth-child(6) a').click();
+        pause(100);
+    });
+
+   it('should log in and render the submit sales page', function () {
+        expect(browser().location().path()).toBe('/submitSales');
+    });
+});
+
+						</code>
 					</section>
 					<section>
 						<h1>Pros</h1>
@@ -98,6 +114,7 @@
 					<section>
 						<h2>Implementation</h2>
 						<img src="img/nodemongo.jpg" alt=""></br>
+						<img src="img/expressjs.jpg" alt="">
 						<img src="img/square.png" width="200px" alt="">
 						<p style="color:red;">"The MEAN stack"</p>
 					</section>
@@ -163,7 +180,7 @@ exports.getSales = function(callback, error) {
 				history: true,
 				center: true,
 
-				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				theme: 'moon' || Reveal.getQueryHash().theme, // available themes are in /css/theme
 				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
 
 				// Parallax scrolling
