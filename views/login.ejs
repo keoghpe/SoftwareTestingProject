@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  >
 <head>
 	<title>Lab 3</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -9,9 +9,9 @@
 	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 	
 </head>
-<body>
+<body ng-app="GenericApp">
 
-	<div class="row">
+	<div ng-controller="GenericController" class="row">
 		<h1>Sign In</h1>
 
 		<% if (message.length > 0) { %>
@@ -21,11 +21,12 @@
 		<form action="/login" method="post">
 			<div class="form-group">
 				<label>Email</label>
-				<input type="text" class="form-control" name="email">
+				<input id="emailField" type="text" class="form-control" name="email" ng-model="user.Email">
+				{{user.email}}
 			</div>
 			<div class="form-group">
 				<label>Password</label>
-				<input type="password" class="form-control" name="password">
+				<input id="passwordField" type="password" class="form-control" name="password" ng-model="user.Password">
 			</div>
 
 			<button type="submit" class="btn btn-warning btn-lg">Login</button>
@@ -36,5 +37,8 @@
 	<p>Need an account? <a href="/register">Signup</a></p>
 	</div>
 	<script type="text/javascript" src="./js/modernizr.js"></script>
+	<script type="text/javascript" src="./lib/angular.min.js"></script>
+	<script type="text/javascript" src="./js/genericApp.js"></script>
+	<script type="text/javascript" src="./js/controllers/genericController.js"></script>
 </body>
 </html>

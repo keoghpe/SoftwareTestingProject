@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="GenericApp">
 <head>
 	<title>Lab 3</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css">
@@ -9,7 +9,7 @@
 	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
 	
 </head>
-<body>
+<body ng-controller="GenericController">
 
 	<div class="row">
 
@@ -41,6 +41,8 @@
 
 		</div>
 	</div>
-	<script type="text/javascript" src="./js/modernizr.js"></script>
+	<script type="text/javascript" src="./lib/angular.min.js"></script>
+	<script type="text/javascript" src="./js/genericApp.js"></script>
+	<script type="text/javascript" src="./js/controllers/genericController.js"></script>
 </body>
 </html>
