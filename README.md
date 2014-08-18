@@ -10,5 +10,5 @@ The commission program produced a monthly sales report that gave the total numbe
 
 ##Screenshots
 
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
-![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+![screen1](https://cloud.githubusercontent.com/assets/1381973/3958683/6ff2b392-2722-11e4-9b90-8eaa62036f44.JPG)
+![screen2](https://cloud.githubusercontent.com/assets/1381973/3958682/6b328832-2722-11e4-85ef-749661689dd0.JPG)
